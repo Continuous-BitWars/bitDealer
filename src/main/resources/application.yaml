@@ -1,0 +1,95 @@
+quarkus:
+  http:
+    auth:
+      basic: true
+      policy:
+        admin-policy:
+          roles-allowed: admin
+      permission:
+        admin-permission:
+          policy: admin-policy
+          paths: /games/manage/*
+  security:
+    users:
+      embedded:
+        enabled: true
+        plain-text: true
+        users:
+          admin: ${API_PASSWORD:admin}
+        roles:
+          admin: admin
+
+  swagger-ui:
+    always-include: true
+
+  datasource:
+    db-kind: h2
+    jdbc:
+      url: "jdbc:h2:/home/jboss/persistence/gamedb"
+  hibernate-orm:
+    database:
+      generation: update
+
+  kubernetes:
+    ingress:
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+    strategy: recreate
+    security-context:
+      run-as-user: 185
+      run-as-group: 185
+      fs-group: 185
+
+    mounts:
+      gamestore:
+        path: /home/jboss/persistence
+    pvc-volumes:
+      gamestore:
+        claim-name: pvc-dealer-gamestore
+    resources:
+      requests:
+        cpu: 2000m
+        memory: 4Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+    env:
+      mapping:
+        "api_password":
+          from-secret: api-user
+          with-key: password
+      secrets: api-user
+  log:
+    level: INFO
+    category:
+      "de.bitwars":
+        level: DEBUG
+
+tournament:
+  sleep:
+    duration: PT10S
+gameround:
+  sleep:
+    duration: PT1S
+step:
+  sleep:
+    duration: PT1S
+
+game:
+  executor:
+    poolsize: 10
+
+"%dev":
+  quarkus:
+    #    hibernate-orm:
+    #      database:
+    #        generation: drop-and-create
+    datasource:
+      jdbc:
+        url: "jdbc:h2:./gamedb"
+
+"%test":
+  quarkus:
+    datasource:
+      jdbc:
+        url: "jdbc:h2:mem:gamedb"

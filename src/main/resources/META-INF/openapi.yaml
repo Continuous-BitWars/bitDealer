@@ -1,0 +1,382 @@
+openapi: 3.0.3
+info:
+  title: Continuous Integration bitWars
+  description: Continuous Integration bitWars
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/'
+tags:
+  - name: players
+    description: managed player
+  - name: games
+    description: managed games
+
+paths:
+  /players:
+    get:
+      summary: List all players
+      operationId: listPlayers
+      tags:
+        - players
+      responses:
+        '200':
+          description: A list of players
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+    post:
+      summary: Create a new player
+      operationId: createPlayer
+      tags:
+        - players
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        '201':
+          description: Player created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+
+  /players/{playerId}:
+    get:
+      summary: Get a player by ID
+      operationId: getPlayerById
+      tags:
+        - players
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Player found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+    put:
+      summary: Update a player
+      operationId: updatePlayer
+      tags:
+        - players
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        '200':
+          description: Player updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+    delete:
+      summary: Delete a player
+      operationId: deletePlayer
+      tags:
+        - players
+      parameters:
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Player deleted
+  /games:
+    get:
+      summary: List all games
+      operationId: listGames
+      tags:
+        - games
+      responses:
+        '200':
+          description: A list of games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+    post:
+      summary: Create a new game
+      operationId: createGame
+      tags:
+        - games
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Game'
+      responses:
+        '201':
+          description: Game created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+  /games/{gameId}:
+    get:
+      summary: Get a game by ID
+      operationId: getGameById
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    put:
+      summary: Update a game
+      operationId: updateGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Game'
+      responses:
+        '200':
+          description: Game updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      summary: Delete a game
+      operationId: deleteGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Game deleted
+
+  /games/{gameId}/players:
+    post:
+      summary: Add a player to a game
+      operationId: addPlayerToGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+      responses:
+        '201':
+          description: Player added to the game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+    get:
+      summary: List all players in a game
+      operationId: listPlayersInGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of players in the game
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+  /games/{gameId}/players/{playerId}:
+    delete:
+      summary: Remove a player from a game
+      operationId: removePlayerFromGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: playerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Player removed from the game
+  /games/{gameId}/running:
+    post:
+      summary: Start a Game
+      operationId: startGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameOptions'
+      responses:
+        '200':
+          description: Start Game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '500':
+          description: Can`t Start Game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      summary: Stop Game
+      operationId: stopGame
+      tags:
+        - games
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Stop Game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '500':
+          description: Can`t Stop Game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+components:
+  schemas:
+    Game:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          readOnly: true
+        name:
+          type: string
+          example: "The Finale Game"
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+          readOnly: true
+        game_options:
+          $ref: '#/components/schemas/GameOptions'
+          readOnly: true
+        status:
+          type: string
+          enum: [running, stopped, done]
+          description: "Current operational status of the game."
+          example: running
+          readOnly: true
+        round_number:
+          type: integer
+          format: int64
+          example: 0
+          readOnly: true
+    Player:
+      type: object
+      required:
+        - id
+        - name
+        - provider-Url
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+          readOnly: true
+        name:
+          type: string
+          example: ButterLampe
+        provider_url:
+          type: string
+          format: uri
+          example: http://ButterLampe/
+    GameOptions:
+      type: object
+      required:
+        - stepSleepDuration
+        - gameRoundSleepDuration
+      properties:
+        step_sleep_duration:
+          description: wait time beetween steps in secends
+          type: integer
+          example: 1

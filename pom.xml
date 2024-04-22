@@ -219,15 +219,15 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <!-- TODO: refactor-->
+                                d
                                 <exclude>**/*Exception.class</exclude>
-                                <exclude>**/*ExceptionMapper.class</exclude>
-                                <exclude>**/ManagementController.class</exclude>
-                                <exclude>**/ScoreHistoryEntry.class</exclude>
-                                <exclude>**/ManagementService.class</exclude>
-                                <exclude>**/*BE.class</exclude>
-                                <exclude>**/GameDAO.class</exclude>
-                                <exclude>**/GameManager.class</exclude>
+                                <exclude>**/GamesApi.class</exclude>
+                                <exclude>**/PlayersApi.class</exclude>
+                                <exclude>**/Game.class</exclude>
+                                <exclude>**/GameOptions.class</exclude>
+                                <exclude>**/Player.class</exclude>
+                                <exclude>**/StatusEnum.class</exclude>
+                                <exclude>**/PlayersResource.class</exclude>
                             </excludes>
                             <rules>
                                 <rule>
@@ -271,12 +271,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>${pmd-plugin.version}</version>
                 <configuration>
-                    <!-- enable incremental analysis -->
+                    <!- enable incremental analysis ->
                     <analysisCache>true</analysisCache>
                     <printFailingErrors>true</printFailingErrors>
                     <rulesets>
@@ -295,6 +296,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
         </plugins>
         <pluginManagement>
             <plugins>

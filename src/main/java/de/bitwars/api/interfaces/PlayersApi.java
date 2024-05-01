@@ -51,7 +51,7 @@ public interface PlayersApi {
      */
     @DELETE
     @Path("/{playerId}")
-    void deletePlayer(@PathParam("playerId") Integer playerId);
+    void deletePlayer(@PathParam("playerId") long playerId);
 
 
     /**
@@ -60,7 +60,7 @@ public interface PlayersApi {
      */
     @GET
     @Path("/{playerId}")
-    Player getPlayerById(@PathParam("playerId") Integer playerId);
+    Player getPlayerById(@PathParam("playerId") long playerId);
 
 
     /**
@@ -77,7 +77,7 @@ public interface PlayersApi {
      */
     @PUT
     @Path("/{playerId}")
-    Player updatePlayer(@PathParam("playerId") Integer playerId, Player player);
+    Player updatePlayer(@PathParam("playerId") long playerId, Player player);
 }
 
 

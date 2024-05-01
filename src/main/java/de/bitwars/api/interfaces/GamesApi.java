@@ -64,7 +64,7 @@ public interface GamesApi {
      */
     @DELETE
     @Path("/{gameId}")
-    void deleteGame(@PathParam(PARAM_GAME_ID) Integer gameId);
+    void deleteGame(@PathParam(PARAM_GAME_ID) long gameId);
 
 
     /**
@@ -73,7 +73,7 @@ public interface GamesApi {
      */
     @GET
     @Path("/{gameId}")
-    Game getGameById(@PathParam(PARAM_GAME_ID) Integer gameId);
+    Game getGameById(@PathParam(PARAM_GAME_ID) long gameId);
 
 
     /**
@@ -89,7 +89,7 @@ public interface GamesApi {
      */
     @GET
     @Path("/{gameId}/players")
-    List<Player> listPlayersInGame(@PathParam(PARAM_GAME_ID) Integer gameId);
+    List<Player> listPlayersInGame(@PathParam(PARAM_GAME_ID) long gameId);
 
 
     /**
@@ -99,7 +99,7 @@ public interface GamesApi {
      */
     @DELETE
     @Path("/{gameId}/players/{playerId}")
-    void removePlayerFromGame(@PathParam(PARAM_GAME_ID) Integer gameId, @PathParam("playerId") Integer playerId);
+    void removePlayerFromGame(@PathParam(PARAM_GAME_ID) long gameId, @PathParam("playerId") long playerId);
 
 
     /**
@@ -110,7 +110,7 @@ public interface GamesApi {
      */
     @POST
     @Path("/{gameId}/running")
-    Game startGame(@PathParam(PARAM_GAME_ID) Integer gameId, GameOptions gameOptions);
+    Game startGame(@PathParam(PARAM_GAME_ID) long gameId, GameOptions gameOptions);
 
 
     /**
@@ -120,7 +120,7 @@ public interface GamesApi {
      */
     @DELETE
     @Path("/{gameId}/running")
-    Game stopGame(@PathParam(PARAM_GAME_ID) Integer gameId);
+    Game stopGame(@PathParam(PARAM_GAME_ID) long gameId);
 
 
     /**
@@ -130,6 +130,6 @@ public interface GamesApi {
      */
     @PUT
     @Path("/{gameId}")
-    Game updateGame(@PathParam(PARAM_GAME_ID) Integer gameId, Game game);
+    Game updateGame(@PathParam(PARAM_GAME_ID) long gameId, Game game);
 
 }

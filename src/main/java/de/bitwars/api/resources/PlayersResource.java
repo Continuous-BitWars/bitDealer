@@ -18,33 +18,56 @@ package de.bitwars.api.resources;
 
 import de.bitwars.api.interfaces.PlayersApi;
 import de.bitwars.api.models.Player;
+import de.bitwars.player.PlayerController;
+import de.bitwars.player.dao.PlayerDAO;
+import de.bitwars.player.mapper.PlayerMapper;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.NotFoundException;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
+@ApplicationScoped
+@RequiredArgsConstructor
 public class PlayersResource implements PlayersApi {
+
+    private final PlayerController playerController;
+    private final PlayerMapper playerMapper;
+
 
     @Override
     public Player createPlayer(Player player) {
-        return null;
+        PlayerDAO playerDAO = playerMapper.toPlayerDAO(player);
+        playerDAO = playerController.createPlayer(playerDAO);
+        return playerMapper.toPlayer(playerDAO);
     }
 
     @Override
-    public void deletePlayer(Integer playerId) {
-        return;
+    public void deletePlayer(long playerId) {
+        playerController.deletePlayer(playerId);
     }
 
     @Override
-    public Player getPlayerById(Integer playerId) {
-        return null;
+    public Player getPlayerById(long playerId) {
+        Optional<PlayerDAO> playerDAO = playerController.getPlayerById(playerId);
+        if (playerDAO.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return playerMapper.toPlayer(playerDAO.get());
     }
 
     @Override
     public List<Player> listPlayers() {
-        return List.of();
+        return playerController.listPlayers().stream().map(playerMapper::toPlayer).toList();
     }
 
     @Override
-    public Player updatePlayer(Integer playerId, Player player) {
-        return null;
+    public Player updatePlayer(long playerId, Player player) {
+        //TODO: dont work
+        player.setId(playerId);
+        PlayerDAO playerDAO = playerMapper.toPlayerDAO(player);
+        playerDAO = playerController.updatePlayer(playerDAO);
+        return playerMapper.toPlayer(playerDAO);
     }
 }

@@ -16,66 +16,19 @@
  */
 package de.bitwars.api.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
-import java.util.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @JsonTypeName("GameOptions")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class GameOptions {
     private Integer stepSleepDuration;
-
-
-    @JsonProperty("step_sleep_duration")
-    public Integer getStepSleepDuration() {
-        return stepSleepDuration;
-    }
-
-    @JsonProperty("step_sleep_duration")
-    public void setStepSleepDuration(Integer stepSleepDuration) {
-        this.stepSleepDuration = stepSleepDuration;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        GameOptions gameOptions = (GameOptions) o;
-        return Objects.equals(this.stepSleepDuration, gameOptions.stepSleepDuration);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(stepSleepDuration);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("class GameOptions {\n");
-
-        sb.append("    stepSleepDuration: ").append(toIndentedString(stepSleepDuration)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
-    }
-
-
 }
 

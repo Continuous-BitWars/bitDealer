@@ -14,18 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.bitwars;
+package de.bitwars.player.dao;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Path("/hello")
-public class ExampleResource {
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String hello() {
-        return "Hello from bitDealer REST";
-    }
+@Entity(name = "player")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class PlayerDAO {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private String providerUrl;
 }

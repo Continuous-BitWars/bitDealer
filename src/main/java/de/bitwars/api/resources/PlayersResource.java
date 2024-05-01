@@ -64,7 +64,6 @@ public class PlayersResource implements PlayersApi {
 
     @Override
     public Player updatePlayer(long playerId, Player player) {
-        //TODO: dont work
         player.setId(playerId);
         PlayerDAO playerDAO = playerMapper.toPlayerDAO(player);
         playerDAO = playerController.updatePlayer(playerDAO);

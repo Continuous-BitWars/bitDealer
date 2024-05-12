@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Analyzer | Continuous BitWars</title>
+    <link rel="stylesheet" href="css/base-layout.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="grid-container" id="app">
+    <!-- Top Navigation Bar -->
+    <header class="navbar" :style=" { background: isDarkMode ? '#3f3f3f' : '' }">
+        <a href="index.html">Analyzer</a>
+        <a href="admin.html">Settings</a>
+        <label class="switch">
+            <input id="switch" type="checkbox" @click="toggleDarkMode">
+            <span class="slider round"></span>
+        </label>
+    </header>
+
+    <main style="text-align: center;">
+        <h2>BitWars Dealer</h2>
+    </main>
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Continuous BitWars | <a href="https://bitwars.de">bitwars.de</a></p>
+    </footer>
+</div>
+
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

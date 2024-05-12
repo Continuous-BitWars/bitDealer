@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Settings | Continuous BitWars</title>
+    <link rel="stylesheet" href="css/base-layout.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+<div class="grid-container" id="app">
+    <!-- Top Navigation Bar -->
+    <header class="navbar" :style=" { background: isDarkMode ? '#3f3f3f' : ''}">
+        <a href="index.html">Analyzer</a>
+        <a href="admin.html">Settings</a>
+        <label class="switch">
+            <input id="switch" type="checkbox" @click="toggleDarkMode">
+            <span class="slider round"></span>
+        </label>
+    </header>
+
+    <main class="main">
+        <!-- Central Section -->
+        <section class="sidebar" :style=" { backgroundColor : isDarkMode ? '#45494d' : '' }">
+            <ul>
+                <li @click="selectGame(game)" :class="{ active: selectedGame && game.id === selectedGame.id }" v-for="game in games" :key="game.gameId">{{ game.name }} ({{ game.status }})</li>
+            </ul>
+            <button @click="showCreateGameDialog">
+                <img class="icon" src="img/add.png">Create Game
+            </button>
+        </section>
+
+        <!-- Central Section for displaying game details -->
+        <section class="content">
+            <h1>Game details</h1>
+            <div v-if="selectedGame">
+                <h2>{{ selectedGame.name }}
+                    <button @click="removeGame(selectedGame.id)">Delete game</button>
+                    <button @click="fetchGameById(selectedGame.id)">reload</button>
+                </h2>
+                <p>Game ID: {{ selectedGame.id }}</p>
+                <p>Tick: {{ selectedGame.round_number}}</p>
+                <p>Status: {{ selectedGame.status }}
+                    <input type="number" v-model="selectedGame.game_options.time_between_ticks" v-bind:readonly="selectedGame.status !== 'stopped'">
+                    <button v-if="selectedGame.status === 'stopped'" @click="startGame(selectedGame.id)">Start</button>
+                    <button v-if="selectedGame.status === 'running'" @click="stopGame(selectedGame.id)">Stop</button>
+                </p>
+                <h3>Players</h3>
+                <ul>
+                    <li v-for="player in selectedGame.players" :key="player.id">
+                        <p>Team: {{ player.name }} <button @click="removePlayer(player.id)">Delete</button></p>
+                        <p>Provider URL: {{ player.provider_url }}</p>
+                        <p>Id: {{ player.id }}</p>
+                    </li>
+                </ul>
+                <form class="player-form" @submit.prevent="addNewPlayer">
+                    <h3>Add new player</h3>
+                    <label for="newPlayerId">Player Id:</label>
+                    <input type="number" id="newPlayerId" v-model="newPlayerId" required>
+                    <label for="newPlayerName">Player Name:</label>
+                    <input type="text" id="newPlayerName" v-model="newPlayerName" required>
+                    <label for="newPlayerURL">Provider URL:</label>
+                    <input type="text" id="newPlayerURL" v-model="newPlayerURL" required>
+                    <button type="submit">Add player</button>
+                </form>
+            </div>
+            <div v-else>
+                Please select a game from the list on the left.
+            </div>
+        </section>
+        <!-- Create Game Modal Dialog -->
+        <div v-if="showDialog" class="modal">
+            <div class="modal-content">
+                <h2>Create Game</h2>
+                <form @submit.prevent="createGame">
+                    <label for="gameName">Game Name:</label>
+                    <input type="text" id="gameName" v-model="newGameName" required>
+                    <button type="submit">Create</button>
+                    <button @click="cancelCreateGame">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Continuous BitWars | <a href="https://bitwars.de">bitwars.de</a></p>
+    </footer>
+</div>
+
+<script src="js/admin.js"></script>
+
+</body>
+</html>

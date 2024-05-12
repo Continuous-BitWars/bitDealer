@@ -14,7 +14,7 @@ import java.util.Objects;
 @Setter
 public class BaseBU {
     private int uid;
-    private int playerId;
+    private long playerId;
     private BasePositionBU basePosition;
 
     private int population;

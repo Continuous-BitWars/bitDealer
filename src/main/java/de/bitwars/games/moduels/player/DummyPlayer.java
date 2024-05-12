@@ -29,7 +29,7 @@ public class DummyPlayer implements ActionProvider {
     @Override
     public List<PlayerActionBU> requestStep(GameBU gameBU) {
         if (this.id == 1001) {
-            return List.of(new PlayerActionBU(0, 1, 1));
+            return List.of(new PlayerActionBU(1, 2, 1));
         }
         return List.of();
     }

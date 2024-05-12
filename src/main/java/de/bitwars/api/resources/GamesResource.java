@@ -29,6 +29,7 @@ import de.bitwars.games.moduels.player.DummyPlayer;
 import de.bitwars.games.moduels.player.RemotePlayer;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
 
@@ -89,16 +90,18 @@ public class GamesResource implements GamesApi {
 
     @Override
     public Game startGame(long gameId, GameOptions gameOptions) {
-        return null;
+        GameBU gameBU = this.gameController.startGame(gameId, gameOptions.getTimeBetweenTicks());
+        return this.gameBUMapper.toGame(gameBU);
     }
 
     @Override
     public Game stopGame(long gameId) {
-        return null;
+        GameBU gameBU = this.gameController.stopGame(gameId);
+        return this.gameBUMapper.toGame(gameBU);
     }
 
     @Override
     public Game updateGame(long gameId, Game game) {
-        return null;
+        throw new NotImplementedException();
     }
 }

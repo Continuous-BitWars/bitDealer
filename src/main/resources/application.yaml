@@ -1,4 +1,6 @@
 quarkus:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
   http:
     auth:
       basic: true
@@ -8,7 +10,7 @@ quarkus:
       permission:
         admin-permission:
           policy: admin-policy
-          paths: /games/manage/*
+          paths: /*
   security:
     users:
       embedded:

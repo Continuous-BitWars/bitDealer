@@ -16,7 +16,7 @@ import java.util.UUID;
 public class BoardActionsBU {
     private static final Logger log = LoggerFactory.getLogger(BoardActionsBU.class);
     private UUID uuid;
-    private int player;
+    private long player;
 
     private int source;
     private int destination;
@@ -24,7 +24,7 @@ public class BoardActionsBU {
 
     private BoardActionsProgressBU progress;
 
-    public BoardActionsBU(int playerId, PlayerActionBU playerAction, int distance) {
+    public BoardActionsBU(long playerId, PlayerActionBU playerAction, int distance) {
         this.uuid = UUID.randomUUID();
         this.player = playerId;
         this.source = playerAction.getSource();

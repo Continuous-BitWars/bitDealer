@@ -39,6 +39,9 @@ public class GameBU implements Runnable {
         this.gameField = new GameFieldBU(gameMap);
         this.gameStatus = GameStatus.STOPPED;
         this.players = new ArrayList<>();
+        this.tickSpeed = Duration.ofSeconds(1);
+        this.tick = 0L;
+        this.remainingPlayers = 0;
     }
 
     public GameBU(long gameId) {
@@ -67,11 +70,11 @@ public class GameBU implements Runnable {
 
     @Override
     public void run() {
-        if (this.gameStatus.equals(GameStatus.DONE)) {
+        if (!this.gameStatus.equals(GameStatus.RUNNING)) {
             return;
         }
-        this.gameStatus = GameStatus.RUNNING;
         //TODO: replace all startplayer to Free!
+        //TODO: check if Player in Game
 
         requestPlayerActions();
         gameField.getBases().values().forEach(base -> base.takeTick(this.gameConfig.getBaseLevelsConfig()));
@@ -154,7 +157,7 @@ public class GameBU implements Runnable {
         gameField.getBoardActions().addAll(newBoardActions);
     }
 
-    private boolean verifyPlayerAction(BaseBU baseBU, int playerId, PlayerActionBU playerAction) {
+    private boolean verifyPlayerAction(BaseBU baseBU, long playerId, PlayerActionBU playerAction) {
         return baseBU.getPlayerId() == playerId &&
                 baseBU.getPopulation() >= playerAction.getAmount();
     }

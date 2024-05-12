@@ -1,20 +1,17 @@
 package de.bitwars.games;
 
-import de.bitwars.games.moduels.ActionProvider;
-import de.bitwars.games.moduels.GameBU;
-import de.bitwars.games.moduels.GameConfigBU;
-import de.bitwars.games.moduels.GameMapBU;
+import de.bitwars.api.models.GameOptions;
+import de.bitwars.games.moduels.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.time.Duration;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
 public class GameController {
@@ -31,7 +28,6 @@ public class GameController {
     public GameBU createGame(String name, GameConfigBU gameConfig, GameMapBU gameMap) {
         GameBU game = new GameBU(idSequence++, name, gameConfig, gameMap);
         this.games.put(game, null);
-
         return game;
     }
 
@@ -40,11 +36,11 @@ public class GameController {
     }
 
     public boolean deleteGame(long gameId) {
-        ScheduledFuture<?> scheduledFuture = this.games.remove(new GameBU(gameId));
+        ScheduledFuture<?> scheduledFuture = this.games.remove(getGameById(gameId));
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
         }
-        return scheduledFuture != null;
+        return true;
     }
 
     public GameBU getGameById(long gameId) {
@@ -60,6 +56,29 @@ public class GameController {
     public GameBU removePlayerFromGame(long gameId, long playerId) {
         GameBU gameBU = this.getGameById(gameId);
         gameBU.removePlayer(playerId);
+        return gameBU;
+    }
+
+    public GameBU startGame(long gameId, long timeBetweenTicksInSeconds) {
+        GameBU gameBU = this.getGameById(gameId);
+
+        synchronized (this) {
+            if (this.games.get(gameBU) == null || this.games.get(gameBU).isCancelled()) {
+                gameBU.setTickSpeed(Duration.ofSeconds(timeBetweenTicksInSeconds));
+                gameBU.setGameStatus(GameStatus.RUNNING);
+                this.games.put(gameBU, this.scheduler.scheduleAtFixedRate(gameBU, 0, gameBU.getTickSpeed().getSeconds(), TimeUnit.SECONDS));
+            }
+        }
+        return gameBU;
+    }
+
+    public GameBU stopGame(long gameId) {
+        GameBU gameBU = this.getGameById(gameId);
+
+        if (gameBU != null) {
+            this.games.get(gameBU).cancel(true);
+            gameBU.setGameStatus(GameStatus.STOPPED);
+        }
         return gameBU;
     }
 }

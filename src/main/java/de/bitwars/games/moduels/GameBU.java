@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +20,8 @@ import java.util.List;
 public class GameBU implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(GameBU.class);
     private long id;
-    private int tick;
+    private String name;
+    private Long tick;
     private Duration tickSpeed;
     private int remainingPlayers;
     private GameStatus gameStatus;
@@ -28,13 +31,18 @@ public class GameBU implements Runnable {
     private GameMapBU gameMap;
     private GameConfigBU gameConfig;
 
-    public GameBU(long gameId, GameConfigBU gameConfig, GameMapBU gameMap) {
+    public GameBU(long gameId, String name, GameConfigBU gameConfig, GameMapBU gameMap) {
         this.id = gameId;
         this.gameConfig = gameConfig;
         this.gameMap = gameMap;
+        this.name = name;
         this.gameField = new GameFieldBU(gameMap);
         this.gameStatus = GameStatus.STOPPED;
         this.players = new ArrayList<>();
+    }
+
+    public GameBU(long gameId) {
+        this(gameId, "", null, null);
     }
 
     public void addPlayer(ActionProvider player) {
@@ -63,6 +71,7 @@ public class GameBU implements Runnable {
             return;
         }
         this.gameStatus = GameStatus.RUNNING;
+        //TODO: replace all startplayer to Free!
 
         requestPlayerActions();
         gameField.getBases().values().forEach(base -> base.takeTick(this.gameConfig.getBaseLevelsConfig()));
@@ -148,5 +157,23 @@ public class GameBU implements Runnable {
     private boolean verifyPlayerAction(BaseBU baseBU, int playerId, PlayerActionBU playerAction) {
         return baseBU.getPlayerId() == playerId &&
                 baseBU.getPopulation() >= playerAction.getAmount();
+    }
+
+    public void removePlayer(long playerId) {
+        throw new NotImplementedException();
+        //TODO: Implemented
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GameBU gameBU = (GameBU) o;
+        return id == gameBU.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

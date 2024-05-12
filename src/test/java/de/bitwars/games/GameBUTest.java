@@ -3,12 +3,12 @@ package de.bitwars.games;
 import de.bitwars.games.moduels.ActionProvider;
 import de.bitwars.games.moduels.BaseBU;
 import de.bitwars.games.moduels.BasePositionBU;
-import de.bitwars.games.moduels.DummyPlayer;
 import de.bitwars.games.moduels.GameBU;
 import de.bitwars.games.moduels.GameConfigBU;
 import de.bitwars.games.moduels.GameConfigBaseLevelsBU;
 import de.bitwars.games.moduels.GameConfigPathsBU;
 import de.bitwars.games.moduels.GameMapBU;
+import de.bitwars.games.moduels.player.DummyPlayer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ public class GameBUTest {
         final GameConfigBU gameConfig = new GameConfigBU(new GameConfigPathsBU(10, 0), configBasisLevel);
 
 
-        GameBU testGame = new GameBU(gameId, gameConfig, gameMapBU);
+        GameBU testGame = new GameBU(gameId, "TEST_GAME", gameConfig, gameMapBU);
         players.forEach(testGame::addPlayer);
         for (int i = 0; i < 10; i++) {
             testGame.run();

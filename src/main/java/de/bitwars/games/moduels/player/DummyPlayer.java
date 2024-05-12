@@ -1,13 +1,17 @@
-package de.bitwars.games.moduels;
+package de.bitwars.games.moduels.player;
+
+import de.bitwars.games.moduels.ActionProvider;
+import de.bitwars.games.moduels.GameBU;
+import de.bitwars.games.moduels.PlayerActionBU;
 
 import java.util.List;
 
 
 public class DummyPlayer implements ActionProvider {
 
-    private int id;
+    private final long id;
 
-    public DummyPlayer(int id) {
+    public DummyPlayer(long id) {
         this.id = id;
     }
 
@@ -18,7 +22,7 @@ public class DummyPlayer implements ActionProvider {
     }
 
     @Override
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 

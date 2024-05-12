@@ -7,7 +7,11 @@ public interface ActionProvider {
         return "";
     }
 
-    default int getId() {
+    default String getName() {
+        return "";
+    }
+
+    default long getId() {
         return 0;
     }
 

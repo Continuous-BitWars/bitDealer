@@ -20,44 +20,71 @@ import de.bitwars.api.interfaces.GamesApi;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
+import de.bitwars.games.Config;
+import de.bitwars.games.GameController;
+import de.bitwars.games.mapper.GameBUMapper;
+import de.bitwars.games.moduels.ActionProvider;
+import de.bitwars.games.moduels.GameBU;
+import de.bitwars.games.moduels.player.DummyPlayer;
+import de.bitwars.games.moduels.player.RemotePlayer;
+import jakarta.enterprise.context.ApplicationScoped;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+@ApplicationScoped
+@RequiredArgsConstructor
 public class GamesResource implements GamesApi {
 
+    private final GameController gameController;
+    private final GameBUMapper gameBUMapper;
+
     @Override
-    public Player addPlayerToGame(Integer gameId, Player player) {
-        return null;
+    public Game addPlayerToGame(Integer gameId, Player player) {
+        ActionProvider actionProvider;
+        if (player.getProviderUrl().startsWith("https")) {
+            actionProvider = new RemotePlayer(player.getId(), player.getName(), player.getProviderUrl());
+        } else {
+            actionProvider = new DummyPlayer(player.getId());
+        }
+
+        GameBU gameBU = this.gameController.addPlayerToGame(gameId, actionProvider);
+        return this.gameBUMapper.toGame(gameBU);
     }
 
     @Override
     public Game createGame(Game game) {
-        return null;
+        GameBU gameBU = this.gameController.createGame(game.getName(), Config.defaultOptions, Config.defaultMap);
+        return this.gameBUMapper.toGame(gameBU);
     }
 
     @Override
     public void deleteGame(long gameId) {
-
+        this.gameController.deleteGame(gameId);
     }
 
     @Override
     public Game getGameById(long gameId) {
-        return null;
+        GameBU gameBU = this.gameController.getGameById(gameId);
+        return this.gameBUMapper.toGame(gameBU);
     }
 
     @Override
     public List<Game> listGames() {
-        return List.of();
+        List<GameBU> gameBUs = this.gameController.getGames();
+        return gameBUs.stream().map(this.gameBUMapper::toGame).toList();
     }
 
     @Override
     public List<Player> listPlayersInGame(long gameId) {
-        return List.of();
+        Game game = this.getGameById(gameId);
+        return game.getPlayers();
     }
 
     @Override
-    public void removePlayerFromGame(long gameId, long playerId) {
-
+    public Game removePlayerFromGame(long gameId, long playerId) {
+        GameBU gameBU = this.gameController.removePlayerFromGame(gameId, playerId);
+        return this.gameBUMapper.toGame(gameBU);
     }
 
     @Override

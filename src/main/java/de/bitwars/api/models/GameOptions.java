@@ -29,6 +29,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GameOptions {
-    private Integer stepSleepDuration;
+    private Integer timeBetweenTicks;
 }
 

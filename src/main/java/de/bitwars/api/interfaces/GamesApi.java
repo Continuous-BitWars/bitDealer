@@ -47,7 +47,7 @@ public interface GamesApi {
      */
     @POST
     @Path("/{gameId}/players")
-    Player addPlayerToGame(@PathParam(PARAM_GAME_ID) Integer gameId, Player player);
+    Game addPlayerToGame(@PathParam(PARAM_GAME_ID) Integer gameId, Player player);
 
 
     /**
@@ -99,7 +99,7 @@ public interface GamesApi {
      */
     @DELETE
     @Path("/{gameId}/players/{playerId}")
-    void removePlayerFromGame(@PathParam(PARAM_GAME_ID) long gameId, @PathParam("playerId") long playerId);
+    Game removePlayerFromGame(@PathParam(PARAM_GAME_ID) long gameId, @PathParam("playerId") long playerId);
 
 
     /**

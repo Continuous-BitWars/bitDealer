@@ -1,5 +1,6 @@
 package de.bitwars.games.moduels;
 
+import de.bitwars.live.GameLiveController;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,10 @@ public class GameBU implements Runnable {
     private GameMapBU gameMap;
     private GameConfigBU gameConfig;
 
-    public GameBU(long gameId, String name, GameConfigBU gameConfig, GameMapBU gameMap) {
+    private GameLiveController gameLiveController;
+
+
+    public GameBU(long gameId, String name, GameConfigBU gameConfig, GameMapBU gameMap, GameLiveController gameLiveController) {
         this.id = gameId;
         this.gameConfig = gameConfig;
         this.gameMap = gameMap;
@@ -42,10 +46,11 @@ public class GameBU implements Runnable {
         this.tickSpeed = Duration.ofSeconds(1);
         this.tick = 0L;
         this.remainingPlayers = 0;
+        this.gameLiveController = gameLiveController;
     }
 
     public GameBU(long gameId) {
-        this(gameId, "", null, null);
+        this(gameId, "", null, null, null);
     }
 
     public void addPlayer(ActionProvider player) {
@@ -94,9 +99,16 @@ public class GameBU implements Runnable {
 
 
         //TODO: Store Step
-        //TODO: send websocket update
+
+        if (this.gameLiveController != null) {
+            this.gameLiveController.broadcastGameStep(this);
+        } else {
+            log.info("GameLiveController is null. Can't send Websocket Update!");
+        }
+
         this.tick++;
     }
+
 
     private void checkIsDone() {
         this.remainingPlayers = this.gameField.getBases().values().stream().map(BaseBU::getPlayerId).filter(playerId -> playerId != 0).distinct().toList().size();

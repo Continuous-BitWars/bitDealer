@@ -38,7 +38,7 @@ public class GameBUTest {
         final GameConfigBU gameConfig = new GameConfigBU(new GameConfigPathsBU(10, 0), configBasisLevel);
 
 
-        GameBU testGame = new GameBU(gameId, "TEST_GAME", gameConfig, gameMapBU);
+        GameBU testGame = new GameBU(gameId, "TEST_GAME", gameConfig, gameMapBU, null);
         players.forEach(testGame::addPlayer);
         for (int i = 0; i < 10; i++) {
             testGame.run();

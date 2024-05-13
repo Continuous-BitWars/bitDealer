@@ -1,13 +1,21 @@
 package de.bitwars.games;
 
-import de.bitwars.api.models.GameOptions;
-import de.bitwars.games.moduels.*;
+import de.bitwars.games.moduels.ActionProvider;
+import de.bitwars.games.moduels.GameBU;
+import de.bitwars.games.moduels.GameConfigBU;
+import de.bitwars.games.moduels.GameMapBU;
+import de.bitwars.games.moduels.GameStatus;
+import de.bitwars.live.GameLiveController;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -21,12 +29,14 @@ public class GameController {
     @ConfigProperty(name = "game.executor.poolsize")
     int executorPoolSize;
 
-
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(executorPoolSize);
     private final Map<GameBU, ScheduledFuture<?>> games = new TreeMap<>(Comparator.comparing(GameBU::getId));
 
+    @Inject
+    GameLiveController gameLiveController;
+
     public GameBU createGame(String name, GameConfigBU gameConfig, GameMapBU gameMap) {
-        GameBU game = new GameBU(idSequence++, name, gameConfig, gameMap);
+        GameBU game = new GameBU(idSequence++, name, gameConfig, gameMap, gameLiveController);
         this.games.put(game, null);
         return game;
     }

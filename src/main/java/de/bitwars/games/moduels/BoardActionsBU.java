@@ -34,7 +34,7 @@ public class BoardActionsBU {
     }
 
     public void takeTick(GameConfigPathsBU configPaths) {
-        if (isInDestination()) {
+        if (isDone()) {
             log.warn("Calculation over BoardActions in Destination");
             return;
         }

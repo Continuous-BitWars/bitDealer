@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @ApplicationScoped
 public class GameLiveController {
@@ -76,6 +75,8 @@ public class GameLiveController {
     }
 
     private void sendSuccessToSession(Long gameId, Session session) {
+        return;
+        /*
         int count = Optional.ofNullable(this.sessions.get(gameId)).orElse(Collections.emptyList()).size();
         log.info("topic info {}: {}", gameId, count);
 
@@ -89,5 +90,6 @@ public class GameLiveController {
         } catch (JsonProcessingException e) {
             log.error("Unable to send message: " + e.getMessage());
         }
+        */
     }
 }

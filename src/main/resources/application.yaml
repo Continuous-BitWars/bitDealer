@@ -20,9 +20,12 @@ quarkus:
           admin: ${API_PASSWORD:admin}
         roles:
           admin: admin
+  cors:
+    enabled: false
 
   swagger-ui:
     always-include: true
+
 
   datasource:
     db-kind: h2
@@ -65,7 +68,7 @@ quarkus:
     level: INFO
     category:
       "de.bitwars":
-        level: DEBUG
+        level: INFO
 
 tournament:
   sleep:

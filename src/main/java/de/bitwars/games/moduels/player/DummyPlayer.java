@@ -36,7 +36,11 @@ public class DummyPlayer implements ActionProvider {
             Optional<BaseBU> free = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == 0).findAny();
             if (first.isPresent() && free.isPresent()) {
                 Random r = new Random();
-                return List.of(new PlayerActionBU(first.get().getUid(), free.get().getUid(), r.nextInt(3)));
+                int sendCount = (r.nextInt(4) + 1);
+                if (sendCount > first.get().getPopulation()) {
+                    sendCount = first.get().getPopulation() - 1;
+                }
+                return List.of(new PlayerActionBU(first.get().getUid(), free.get().getUid(), sendCount));
             }
         }
         return List.of();

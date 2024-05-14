@@ -5,7 +5,9 @@ import de.bitwars.games.moduels.GameBU;
 import de.bitwars.games.moduels.GameConfigBU;
 import de.bitwars.games.moduels.GameMapBU;
 import de.bitwars.games.moduels.GameStatus;
+import de.bitwars.games.moduels.player.DummyPlayer;
 import de.bitwars.live.GameLiveController;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
@@ -35,6 +37,13 @@ public class GameController {
     @Inject
     GameLiveController gameLiveController;
 
+    @PostConstruct
+    void postConstruct() {
+        GameBU gameBU = this.createGame("Default", Config.defaultOptions, Config.defaultMap);
+        this.addPlayerToGame(gameBU.getId(), new DummyPlayer(1001));
+        this.addPlayerToGame(gameBU.getId(), new DummyPlayer(1002));
+    }
+
     public GameBU createGame(String name, GameConfigBU gameConfig, GameMapBU gameMap) {
         GameBU game = new GameBU(idSequence++, name, gameConfig, gameMap, gameLiveController);
         this.games.put(game, null);
@@ -57,7 +66,7 @@ public class GameController {
         return this.games.keySet().stream().filter(gameBU -> gameBU.getId() == gameId).findFirst().orElseThrow(NotFoundException::new);
     }
 
-    public GameBU addPlayerToGame(Integer gameId, ActionProvider actionProvider) {
+    public GameBU addPlayerToGame(long gameId, ActionProvider actionProvider) {
         GameBU gameBU = this.getGameById(gameId);
         gameBU.addPlayer(actionProvider);
         return gameBU;

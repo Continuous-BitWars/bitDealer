@@ -45,7 +45,7 @@ public class GameBUMapper {
         )).toList();
 
         List<Base> bases = gameBU.getGameField().getBases().values().stream().map(baseBU -> new Base(
-                baseBU.getPlayerId(),
+                baseBU.getUid(),
                 baseBU.getPlayerId(),
                 baseBU.getPopulation(),
                 baseBU.getLevel(),

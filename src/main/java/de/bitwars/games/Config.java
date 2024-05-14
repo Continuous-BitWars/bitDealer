@@ -15,8 +15,8 @@ public class Config {
 
     public static GameMapBU defaultMap = new GameMapBU("Default", 2, List.of(
             new BaseBU(1, 1, new BasePositionBU(0, 0, 0), 10, 0, 0),
-            new BaseBU(2, 0, new BasePositionBU(0, 0, 0), 10, 0, 0),
-            new BaseBU(3, 2, new BasePositionBU(0, 0, 0), 10, 0, 0)
+            new BaseBU(2, 0, new BasePositionBU(3, 0, 0), 10, 0, 0),
+            new BaseBU(3, 2, new BasePositionBU(6, 0, 0), 10, 0, 0)
     ));
     public static GameConfigBU defaultOptions = new GameConfigBU(
             new GameConfigPathsBU(10, 1),

@@ -33,14 +33,13 @@ public class DummyPlayer implements ActionProvider {
     public List<PlayerActionBU> requestStep(GameBU gameBU) {
         if (this.id == 1001 || this.id == 1002) {
             Optional<BaseBU> first = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id).findAny();
-            Optional<BaseBU> free = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == 0).findAny();
-            if (first.isPresent() && free.isPresent()) {
+            if (first.isPresent()) {
                 Random r = new Random();
                 int sendCount = (r.nextInt(4) + 1);
                 if (sendCount > first.get().getPopulation()) {
                     sendCount = first.get().getPopulation() - 1;
                 }
-                return List.of(new PlayerActionBU(first.get().getUid(), free.get().getUid(), sendCount));
+                return List.of(new PlayerActionBU(first.get().getUid(), 2, sendCount));
             }
         }
         return List.of();

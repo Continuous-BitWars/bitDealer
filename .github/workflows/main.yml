@@ -3,7 +3,7 @@ on:
   push:
 
 env:
-  DEPLOYMENT_NAME: dealer
+  DEPLOYMENT_NAME: bitdealer
   DEPLOYMENT_TOKEN: ${{ secrets.TOKEN }}
   NAMESPACE: ${{ vars.NAMESPACE }}
   DEALER_URL: ${{ vars.DEALER_URL }}

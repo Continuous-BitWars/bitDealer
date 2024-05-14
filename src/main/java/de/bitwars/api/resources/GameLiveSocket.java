@@ -32,16 +32,20 @@ public class GameLiveSocket {
 
     @OnClose
     public void onClose(Session session) {
+        this.gameLiveController.unsubscribeAll(session);
         log.info("onClose {}", session.getId());
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
+        this.gameLiveController.unsubscribeAll(session);
         log.error("onError {}", session.getId(), throwable);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
+        log.info("onMessage {} {}", session.getId(), message);
+
         try {
             PubSubMessage pubSubMessage = objectMapper.readValue(message, PubSubMessage.class);
             String pubSubMessageString = pubSubMessage.getMessage().toString();

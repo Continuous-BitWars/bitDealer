@@ -47,6 +47,11 @@ public class GameLiveController {
         sendSuccessToSession(gameId, session);
     }
 
+    public void unsubscribeAll(Session session) {
+        this.sessions.values().forEach(sessions1 -> sessions1.remove(session));
+        log.debug("Unsubscribing all sessions: {}", session.getId());
+    }
+
     public void broadcastToTopic(long gameId, String message) {
         sessions.get(gameId).forEach(s -> {
             s.getAsyncRemote().sendObject(message, result -> {

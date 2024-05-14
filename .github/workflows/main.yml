@@ -36,15 +36,11 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - id: read-docker-image-identifiers
-        name: Read Docker Image Identifiers
-        run: echo ::set-env name=IMAGE_REPOSITORY::$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')
-
 
       - name: Push the Docker image to GHCR
         if: github.ref == 'refs/heads/main'
         run: |
-          docker push ghcr.io/${{ env.IMAGE_REPOSITORY }}/${{ env.DEPLOYMENT_NAME }}
+          docker push ghcr.io/$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')/${{ env.DEPLOYMENT_NAME }}
 
       - name: Deploy
         if: env.DEPLOYMENT_TOKEN && github.ref == 'refs/heads/main'

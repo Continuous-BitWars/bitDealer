@@ -48,4 +48,8 @@ public class BoardActionsBU {
     public boolean isInDestination() {
         return progress.getTraveled() >= progress.getDistance();
     }
+
+    public boolean isDone() {
+        return progress.getTraveled() > progress.getDistance();
+    }
 }

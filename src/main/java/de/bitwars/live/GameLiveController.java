@@ -64,7 +64,7 @@ public class GameLiveController {
 
     public void broadcastGameStep(GameBU gameBU) {
         try {
-            Board board = this.gameBUMapper.toBoard(gameBU);
+            Board board = this.gameBUMapper.toBoard(gameBU, 0);
             PubSubMessage pubSubMessage = new PubSubMessage("game_" + gameBU.getId(), board);
             String message = objectMapper.writeValueAsString(pubSubMessage);
 

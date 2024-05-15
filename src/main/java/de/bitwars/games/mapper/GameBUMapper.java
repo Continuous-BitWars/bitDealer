@@ -34,7 +34,7 @@ public class GameBUMapper {
         return new Game(gameBU.getId(), gameBU.getName(), players, gameOptions, statusEnum, gameBU.getTick());
     }
 
-    public Board toBoard(GameBU gameBU) {
+    public Board toBoard(GameBU gameBU, long playerId) {
         List<BoardActions> boardActions = gameBU.getGameField().getBoardActions().stream().map(boardActionsBU -> new BoardActions(
                 boardActionsBU.getUuid().toString(),
                 boardActionsBU.getPlayer(),
@@ -66,7 +66,7 @@ public class GameBUMapper {
                 gameBU.getTick(),
                 gameBU.getPlayers().size(),
                 gameBU.getRemainingPlayers(),
-                0
+                playerId
 
         );
         return new Board(boardActions, bases, gameConfig, game);

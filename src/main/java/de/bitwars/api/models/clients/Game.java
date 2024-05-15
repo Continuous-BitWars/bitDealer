@@ -14,5 +14,5 @@ public class Game {
     private long tick;
     private int playerCount;
     private int remainingPlayers;
-    private int player;
+    private long player;
 }

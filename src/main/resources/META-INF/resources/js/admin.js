@@ -5,13 +5,16 @@ Vue.createApp({
             showDialog: false,   // Flag to show/hide the create game dialog
             newGameName: '',     // Store the new game name
             selectedGame: null,  // Store the selected game details
-            isDarkMode: false
+            isDarkMode: false,
+            newPlayerId: '',
+            newPlayerName: '',
+            newPlayerURL: '',
         };
     },
     created() {
         const themePreference = localStorage.getItem('darkMode')
 
-        if(themePreference) {
+        if (themePreference) {
             this.isDarkMode = JSON.parse(themePreference);
             this.applyTheme();
         }
@@ -55,38 +58,37 @@ Vue.createApp({
                     "name": this.newGameName,
                 }),
             })
-            .then(response => {
-                if (response.ok) {
-                    this.loadGames(); // Reload the game list on success
-                    this.showDialog = false;
-                    this.newGameName = '';
-                } else {
-                    console.error('Error creating game:', response.statusText);
-                }
-            })
-            .catch(error => {
-                console.error('Error creating game:', error);
-            });
+                .then(response => {
+                    if (response.ok) {
+                        this.loadGames(); // Reload the game list on success
+                        this.showDialog = false;
+                        this.newGameName = '';
+                    } else {
+                        console.error('Error creating game:', response.statusText);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creating game:', error);
+                });
         },
         selectGame(game) {
             this.selectedGame = game;
-            console.log(this.selectedGame)
             this.fetchGameById(this.selectedGame.id);
         },
         fetchGameById(gameId) {
             fetch(`/games/${gameId}`, {
                 method: 'GET'
             })
-            .then(response => response.json())
-            .then(response => {
-                if (this.selectedGame.id === gameId) {
-                    this.selectedGame = response;
-                    this.loadGames()
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
+                .then(response => response.json())
+                .then(response => {
+                    if (this.selectedGame.id === gameId) {
+                        this.selectedGame = response;
+                        this.loadGames()
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         },
         startGame(gameId) {
             fetch(`/games/${gameId}/running`, {
@@ -119,21 +121,21 @@ Vue.createApp({
 
         },
         addNewPlayer() {
-                if (this.selectedGame) {
-                    const gameId = this.selectedGame.id;
+            if (this.selectedGame) {
+                const gameId = this.selectedGame.id;
 
-                    // Send a POST request to /games/manage/{gameId}/players with query parameters
-                    fetch(`/games/${gameId}/players`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            "id": this.newPlayerId,
-                            "name": this.newPlayerName,
-                            "provider_url": this.newPlayerURL
-                        }),
-                    })
+                // Send a POST request to /games/manage/{gameId}/players with query parameters
+                fetch(`/games/${gameId}/players`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "id": this.newPlayerId,
+                        "name": this.newPlayerName,
+                        "provider_url": this.newPlayerURL
+                    }),
+                })
                     .then(response => {
                         if (response.ok) {
                             // Reload the selected game to update the team list
@@ -148,26 +150,26 @@ Vue.createApp({
                     .catch(error => {
                         console.error('Error adding Player:', error);
                     });
-                }
-            },
-            removePlayer(playerId) {
-                if (this.selectedGame) {
-                    const gameId = this.selectedGame.id;
-                    fetch(`/games/${gameId}/players/${playerId}`, {
-                        method: 'DELETE',
-                    })
-                        .then(response => {
-                            this.fetchGameById(gameId);
-                        })
-                        .catch(error => {
-                            console.error('Error remove Player:', error);
-                        });
-                }
-            },
-            removeGame(gameId) {
-                fetch(`/games/${gameId}`, {
+            }
+        },
+        removePlayer(playerId) {
+            if (this.selectedGame) {
+                const gameId = this.selectedGame.id;
+                fetch(`/games/${gameId}/players/${playerId}`, {
                     method: 'DELETE',
                 })
+                    .then(response => {
+                        this.fetchGameById(gameId);
+                    })
+                    .catch(error => {
+                        console.error('Error remove Player:', error);
+                    });
+            }
+        },
+        removeGame(gameId) {
+            fetch(`/games/${gameId}`, {
+                method: 'DELETE',
+            })
                 .then(response => {
                     if (response.ok) {
                         this.selectedGame = undefined;
@@ -179,19 +181,19 @@ Vue.createApp({
                 .catch(error => {
                     console.error('Error removing game:', error);
                 });
-            },
-            toggleDarkMode() {
-                this.isDarkMode = !this.isDarkMode;
+        },
+        toggleDarkMode() {
+            this.isDarkMode = !this.isDarkMode;
 
-                this.applyTheme();
-                localStorage.setItem('darkMode', JSON.stringify(this.isDarkMode));
-            },
-            applyTheme() {
-                if(this.isDarkMode) {
-                    document.body.classList.add('dark-mode');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                }
+            this.applyTheme();
+            localStorage.setItem('darkMode', JSON.stringify(this.isDarkMode));
+        },
+        applyTheme() {
+            if (this.isDarkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
             }
+        }
     },
 }).mount('#app')

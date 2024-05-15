@@ -40,13 +40,13 @@ public class PlayerMapper {
                 return myPlayerDAO;
             }
         }
-        return new PlayerDAO(null, player.getName(), player.getProviderUrl());
+        return new PlayerDAO(null, player.getName(), player.getProviderUrl(), player.getColor());
     }
 
     public Player toPlayer(PlayerDAO playerDAO) {
         if (playerDAO == null) {
             return null;
         }
-        return new Player(playerDAO.getId(), playerDAO.getName(), playerDAO.getProviderUrl());
+        return new Player(playerDAO.getId(), playerDAO.getName(), playerDAO.getProviderUrl(), playerDAO.getColor());
     }
 }

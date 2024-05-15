@@ -9,6 +9,7 @@ Vue.createApp({
             newPlayerId: '',
             newPlayerName: '',
             newPlayerURL: '',
+            newColor: '#FFFFFF',
         };
     },
     created() {
@@ -133,7 +134,8 @@ Vue.createApp({
                     body: JSON.stringify({
                         "id": this.newPlayerId,
                         "name": this.newPlayerName,
-                        "provider_url": this.newPlayerURL
+                        "provider_url": this.newPlayerURL,
+                        "color": this.newColor
                     }),
                 })
                     .then(response => {

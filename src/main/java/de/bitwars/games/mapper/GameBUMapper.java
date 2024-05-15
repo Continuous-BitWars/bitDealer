@@ -22,7 +22,7 @@ public class GameBUMapper {
 
 
     public Game toGame(GameBU gameBU) {
-        List<Player> players = gameBU.getPlayers().stream().map(actionProvider -> new Player(actionProvider.getId(), actionProvider.getName(), actionProvider.getUrl())).toList();
+        List<Player> players = gameBU.getPlayers().stream().map(actionProvider -> new Player(actionProvider.getId(), actionProvider.getName(), actionProvider.getUrl(), actionProvider.getColor())).toList();
         GameOptions gameOptions = new GameOptions(((int) gameBU.getTickSpeed().getSeconds()));
 
         StatusEnum statusEnum = switch (gameBU.getGameStatus()) {

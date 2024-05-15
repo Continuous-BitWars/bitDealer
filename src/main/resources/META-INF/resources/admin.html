@@ -23,7 +23,9 @@
         <!-- Central Section -->
         <section class="sidebar" :style=" { backgroundColor : isDarkMode ? '#45494d' : '' }">
             <ul>
-                <li @click="selectGame(game)" :class="{ active: selectedGame && game.id === selectedGame.id }" v-for="game in games" :key="game.gameId">{{ game.name }} ({{ game.status }})</li>
+                <li @click="selectGame(game)" :class="{ active: selectedGame && game.id === selectedGame.id }"
+                    v-for="game in games" :key="game.gameId">{{ game.name }} ({{ game.status }})
+                </li>
             </ul>
             <button @click="showCreateGameDialog">
                 <img class="icon" src="img/add.png">Create Game
@@ -41,16 +43,21 @@
                 <p>Game ID: {{ selectedGame.id }}</p>
                 <p>Tick: {{ selectedGame.round_number}}</p>
                 <p>Status: {{ selectedGame.status }}
-                    <input type="number" v-model="selectedGame.game_options.time_between_ticks" v-bind:readonly="selectedGame.status !== 'stopped'">
+                    <input type="number" v-model="selectedGame.game_options.time_between_ticks"
+                           v-bind:readonly="selectedGame.status !== 'stopped'">
                     <button v-if="selectedGame.status === 'stopped'" @click="startGame(selectedGame.id)">Start</button>
                     <button v-if="selectedGame.status === 'running'" @click="stopGame(selectedGame.id)">Stop</button>
                 </p>
                 <h3>Players</h3>
                 <ul>
                     <li v-for="player in selectedGame.players" :key="player.id">
-                        <p>Team: {{ player.name }} <button @click="removePlayer(player.id)">Delete</button></p>
+                        <p>
+                            <span :style="{'color': player.color }">Team: {{ player.name }} </span>
+                            <button @click="removePlayer(player.id)">Delete</button>
+                        </p>
                         <p>Provider URL: {{ player.provider_url }}</p>
                         <p>Id: {{ player.id }}</p>
+                        <p>Color: {{ player.color }}</p>
                     </li>
                 </ul>
                 <form class="player-form" @submit.prevent="addNewPlayer">
@@ -58,9 +65,11 @@
                     <label for="newPlayerId">Player Id:</label>
                     <input type="number" id="newPlayerId" v-model="newPlayerId" required>
                     <label for="newPlayerName">Player Name:</label>
-                    <input type="text" id="newPlayerName" v-model="newPlayerName" required>
+                    <input type="text" id="newPlayerName" v-model="newPlayerName">
                     <label for="newPlayerURL">Provider URL:</label>
-                    <input type="text" id="newPlayerURL" v-model="newPlayerURL" required>
+                    <input type="text" id="newPlayerURL" v-model="newPlayerURL">
+                    <label for="newPlayerURL">Color:</label>
+                    <input type="color" id="newColor" v-model="newColor">
                     <button type="submit">Add player</button>
                 </form>
             </div>

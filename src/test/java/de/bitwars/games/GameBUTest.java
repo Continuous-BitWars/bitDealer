@@ -23,8 +23,8 @@ public class GameBUTest {
         final long gameId = 1L;
 
         final Collection<ActionProvider> players = new ArrayList<>();
-        players.add(new DummyPlayer(1001));
-        players.add(new DummyPlayer(1002));
+        players.add(new DummyPlayer(1001, "#FF0000"));
+        players.add(new DummyPlayer(1002, "#0000FF"));
 
         final List<BaseBU> bases = new ArrayList<>();
         bases.add(new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0));

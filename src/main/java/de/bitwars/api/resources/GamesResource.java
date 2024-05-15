@@ -44,9 +44,9 @@ public class GamesResource implements GamesApi {
     public Game addPlayerToGame(Integer gameId, Player player) {
         ActionProvider actionProvider;
         if (player.getProviderUrl().startsWith("https")) {
-            actionProvider = new RemotePlayer(player.getId(), player.getName(), player.getProviderUrl());
+            actionProvider = new RemotePlayer(player.getId(), player.getName(), player.getProviderUrl(), player.getColor());
         } else {
-            actionProvider = new DummyPlayer(player.getId());
+            actionProvider = new DummyPlayer(player.getId(), player.getColor());
         }
 
         GameBU gameBU = this.gameController.addPlayerToGame(gameId, actionProvider);

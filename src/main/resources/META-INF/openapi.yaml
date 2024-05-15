@@ -342,7 +342,7 @@ components:
           readOnly: true
         status:
           type: string
-          enum: [running, stopped, done]
+          enum: [ running, stopped, done ]
           description: "Current operational status of the game."
           example: running
           readOnly: true
@@ -357,6 +357,7 @@ components:
         - id
         - name
         - provider-Url
+        - color
       properties:
         id:
           type: integer
@@ -369,6 +370,9 @@ components:
         provider_url:
           type: string
           format: uri
+          example: http://ButterLampe/
+        color:
+          type: string
           example: http://ButterLampe/
     GameOptions:
       type: object

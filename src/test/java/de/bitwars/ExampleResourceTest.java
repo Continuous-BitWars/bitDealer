@@ -35,7 +35,7 @@ class ExampleResourceTest {
     void testPostPlayersEndpointWithoutAuthorization() {
         given()
                 .when()
-                .body(new Player(1L, "Peter", "http://fgf.de/"))
+                .body(new Player(1L, "Peter", "http://fgf.de/", "#DA3359"))
                 .post("/players")
                 .then()
                 .statusCode(401)
@@ -48,12 +48,12 @@ class ExampleResourceTest {
         given()
                 .when()
                 .auth().basic("admin", "admin")
-                .body(new Player(1L, "Peter", "http://myurl.fsit/"))
+                .body(new Player(1L, "Peter", "http://myurl.fsit/", "#DA3359"))
                 .contentType(ContentType.JSON)
                 .post("/players")
                 .then()
                 .statusCode(200)
-                .body(is("{\"id\":1,\"name\":\"Peter\",\"provider_url\":\"http://myurl.fsit/\"}"));
+                .body(is("{\"id\":1,\"name\":\"Peter\",\"provider_url\":\"http://myurl.fsit/\",\"color\":\"#DA3359\"}"));
 
     }
 

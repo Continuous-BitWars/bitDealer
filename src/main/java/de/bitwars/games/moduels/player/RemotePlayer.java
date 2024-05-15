@@ -11,11 +11,13 @@ public class RemotePlayer implements ActionProvider {
     private final long id;
     private final String name;
     private final String url;
+    private final String color;
 
-    public RemotePlayer(long id, String name, String url) {
+    public RemotePlayer(long id, String name, String url, String color) {
         this.id = id;
         this.name = name;
         this.url = url;
+        this.color = color;
     }
 
     @Override

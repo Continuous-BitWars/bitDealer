@@ -8,7 +8,11 @@ public interface ActionProvider {
     }
 
     default String getName() {
-        return "";
+        return "Butterlampe";
+    }
+
+    default String getColor() {
+        return "#DA3359";
     }
 
     default long getId() {

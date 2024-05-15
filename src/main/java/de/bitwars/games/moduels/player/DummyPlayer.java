@@ -13,9 +13,11 @@ import java.util.Random;
 public class DummyPlayer implements ActionProvider {
 
     private final long id;
+    private final String color;
 
-    public DummyPlayer(long id) {
+    public DummyPlayer(long id, String color) {
         this.id = id;
+        this.color = color;
     }
 
 
@@ -32,6 +34,11 @@ public class DummyPlayer implements ActionProvider {
     @Override
     public String getName() {
         return "DummyPlayer_" + this.id;
+    }
+
+    @Override
+    public String getColor() {
+        return this.color;
     }
 
     @Override

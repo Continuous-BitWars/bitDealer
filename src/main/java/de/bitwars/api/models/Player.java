@@ -34,5 +34,6 @@ public class Player {
     private String name;
     @JsonProperty("provider_url")
     private String providerUrl;
+    private String color;
 }
 

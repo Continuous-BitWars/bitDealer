@@ -35,4 +35,5 @@ public class PlayerDAO {
     private Long id;
     private String name;
     private String providerUrl;
+    private String color;
 }

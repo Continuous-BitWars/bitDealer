@@ -12,6 +12,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.Comparator;
@@ -26,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 @ApplicationScoped
 public class GameController {
 
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
     private static long idSequence = 1;
 
     @ConfigProperty(name = "game.executor.poolsize")
@@ -84,14 +87,18 @@ public class GameController {
 
     public GameBU startGame(long gameId, long timeBetweenTicksInSeconds) {
         GameBU gameBU = this.getGameById(gameId);
+        log.info("Try start Game: {} -> {}", gameBU.getId(), gameBU.getName());
 
         synchronized (this) {
             if (this.games.get(gameBU) == null || this.games.get(gameBU).isCancelled()) {
                 gameBU.setTickSpeed(Duration.ofSeconds(timeBetweenTicksInSeconds));
                 gameBU.setGameStatus(GameStatus.RUNNING);
                 this.games.put(gameBU, this.scheduler.scheduleAtFixedRate(gameBU, 0, gameBU.getTickSpeed().getSeconds(), TimeUnit.SECONDS));
+            } else {
+                log.info("Error by start Game: {} -> {}", gameBU.getId(), gameBU.getName());
             }
         }
+        log.info("Started Game: {} -> {}", gameBU.getId(), gameBU.getName());
         return gameBU;
     }
 

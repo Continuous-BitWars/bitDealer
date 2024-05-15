@@ -52,14 +52,17 @@ public class GameLiveController {
     }
 
     public void broadcastToTopic(long gameId, String message) {
-        sessions.get(gameId).forEach(s -> {
-            s.getAsyncRemote().sendObject(message, result -> {
-                if (result.getException() != null) {
-                    log.error("Unable to send message: " + result.getException());
-                }
+        if (sessions.get(gameId) != null) {
+            sessions.get(gameId).forEach(s -> {
+                s.getAsyncRemote().sendObject(message, result -> {
+                    if (result.getException() != null) {
+                        log.error("Unable to send message: " + result.getException());
+                    }
+                });
             });
-
-        });
+        } else {
+            log.debug("No session found for gameId: {}", gameId);
+        }
     }
 
     public void broadcastGameStep(GameBU gameBU) {

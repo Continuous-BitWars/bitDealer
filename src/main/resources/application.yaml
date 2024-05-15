@@ -99,6 +99,11 @@ game:
     datasource:
       jdbc:
         url: "jdbc:h2:./gamedb"
+    log:
+      level: INFO
+      category:
+        "de.bitwars":
+          level: DEBUG
 
 "%test":
   quarkus:

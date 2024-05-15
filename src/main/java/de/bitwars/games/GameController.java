@@ -39,9 +39,13 @@ public class GameController {
 
     @PostConstruct
     void postConstruct() {
-        GameBU gameBU = this.createGame("Default", Config.defaultOptions, Config.defaultMap);
+        GameBU gameBU = this.createGame("Default 1", Config.defaultOptions, Config.defaultMap);
         this.addPlayerToGame(gameBU.getId(), new DummyPlayer(1001));
         this.addPlayerToGame(gameBU.getId(), new DummyPlayer(1002));
+
+        GameBU gameBU1 = this.createGame("Default 2", Config.defaultOptions, Config.defaultMap);
+        this.addPlayerToGame(gameBU1.getId(), new DummyPlayer(1001));
+        this.addPlayerToGame(gameBU1.getId(), new DummyPlayer(1002));
     }
 
     public GameBU createGame(String name, GameConfigBU gameConfig, GameMapBU gameMap) {

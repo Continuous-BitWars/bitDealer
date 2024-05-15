@@ -30,6 +30,11 @@ public class DummyPlayer implements ActionProvider {
     }
 
     @Override
+    public String getName() {
+        return "DummyPlayer_" + this.id;
+    }
+
+    @Override
     public List<PlayerActionBU> requestStep(GameBU gameBU) {
         if (this.id == 1001 || this.id == 1002) {
             Optional<BaseBU> first = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id).findAny();

@@ -8,9 +8,15 @@ quarkus:
         admin-policy:
           roles-allowed: admin
       permission:
+        open-permission:
+          policy: permit
+          methods: GET,OPTIONS
+          paths: /*
+          enabled: true
         admin-permission:
           policy: admin-policy
           paths: /*
+          methods: POST,PUT,PATCH,DELETE
   security:
     users:
       embedded:

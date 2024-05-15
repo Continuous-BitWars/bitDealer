@@ -107,6 +107,7 @@ public class GameController {
 
         if (gameBU != null) {
             this.games.get(gameBU).cancel(true);
+            this.games.put(gameBU, null);
             gameBU.setGameStatus(GameStatus.STOPPED);
         }
         return gameBU;

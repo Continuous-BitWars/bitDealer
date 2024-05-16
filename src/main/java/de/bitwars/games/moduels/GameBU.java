@@ -112,6 +112,7 @@ public class GameBU implements Runnable {
 
     private void checkIsDone() {
         this.remainingPlayers = this.gameField.getBases().values().stream().map(BaseBU::getPlayerId).filter(playerId -> playerId != 0).distinct().toList().size();
+        log.debug("checkIsDone: remainingPlayers={}", this.remainingPlayers);
         if (this.remainingPlayers <= 1) {
             this.gameStatus = GameStatus.DONE;
         }

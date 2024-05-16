@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -111,7 +112,11 @@ public class GameBU implements Runnable {
     }
 
     private void checkIsDone() {
-        this.remainingPlayers = this.gameField.getBases().values().stream().map(BaseBU::getPlayerId).filter(playerId -> playerId != 0).distinct().toList().size();
+        List<Long> basesIds = this.gameField.getBases().values().stream().map(BaseBU::getPlayerId).filter(playerId -> playerId != 0).distinct().toList();
+        List<Long> actionsIds = this.gameField.getBoardActions().stream().map(BoardActionsBU::getPlayer).distinct().toList();
+        List<Long> activePlayer = Stream.concat(basesIds.stream(), actionsIds.stream()).distinct().toList();
+        this.remainingPlayers = activePlayer.size();
+
         log.debug("checkIsDone: remainingPlayers={}", this.remainingPlayers);
         if (this.remainingPlayers <= 1) {
             this.gameStatus = GameStatus.DONE;

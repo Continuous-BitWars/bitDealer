@@ -21,7 +21,20 @@ public class GameFieldBU {
     public GameFieldBU(GameMapBU gameMap) {
         this.boardActions = new ArrayList<>();
         this.bases = new HashMap<>();
-        gameMap.getBases().forEach(baseBU -> this.bases.put(baseBU.getUid(), baseBU));
+        gameMap.getBases().forEach(baseBU -> this.bases.put(baseBU.getUid(), new BaseBU(
+                                baseBU.getUid(),
+                                0,
+                                new BasePositionBU(
+                                        baseBU.getBasePosition().getX(),
+                                        baseBU.getBasePosition().getY(),
+                                        baseBU.getBasePosition().getZ()
+                                ),
+                                baseBU.getPopulation(),
+                                baseBU.getLevel(),
+                                baseBU.getUnitsUntilUpgrade()
+                        )
+                )
+        );
     }
 }
 

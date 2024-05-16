@@ -79,11 +79,6 @@ public class GameBU implements Runnable {
             log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
             return;
         }
-        if (this.tick == 0) {
-            releaseAllFreePlayerBases(this.players.size());
-        }
-
-        //TODO: replace all startplayer to Free!
 
         requestPlayerActions();
         gameField.getBases().values().forEach(base -> base.takeTick(this.gameConfig.getBaseLevelsConfig()));
@@ -112,15 +107,6 @@ public class GameBU implements Runnable {
 
         this.tick++;
     }
-
-    private void releaseAllFreePlayerBases(int size) {
-        this.gameMap.getBases().stream()
-                .filter(base -> base.getPlayerId() > size)
-                .map(BaseBU::getUid)
-                .forEach(baseId -> this.gameField.getBases().get(baseId).setPlayerId(0));
-        log.info("releaseAllFreePlayerBases: {}", size);
-    }
-
 
     private void checkIsDone() {
         this.remainingPlayers = this.gameField.getBases().values().stream().map(BaseBU::getPlayerId).filter(playerId -> playerId != 0).distinct().toList().size();

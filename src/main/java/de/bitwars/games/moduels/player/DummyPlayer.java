@@ -6,7 +6,6 @@ import de.bitwars.games.moduels.GameBU;
 import de.bitwars.games.moduels.PlayerActionBU;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 
@@ -43,15 +42,17 @@ public class DummyPlayer implements ActionProvider {
 
     @Override
     public List<PlayerActionBU> requestStep(GameBU gameBU) {
-        if (this.id == 1001 || this.id == 1002) {
-            Optional<BaseBU> first = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id).findAny();
-            if (first.isPresent()) {
-                Random r = new Random();
-                int sendCount = (r.nextInt(4) + 1);
-                if (sendCount > first.get().getPopulation()) {
-                    sendCount = first.get().getPopulation() - 1;
-                }
-                return List.of(new PlayerActionBU(first.get().getUid(), 2, sendCount));
+        if (this.id >= 1001 && this.id <= 1010) {
+            Random rand = new Random();
+            List<BaseBU> ownBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id).toList();
+            List<BaseBU> otherBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() != this.id).toList();
+            if (!ownBases.isEmpty() && !otherBases.isEmpty()) {
+                BaseBU baseSource = ownBases.get(rand.nextInt(ownBases.size()));
+                BaseBU baseTarget = otherBases.get(rand.nextInt(otherBases.size()));
+                int sendCount = rand.nextInt(baseSource.getPopulation() - 1);
+
+                return List.of(new PlayerActionBU(baseSource.getUid(), baseTarget.getUid(), sendCount));
+
             }
         }
         return List.of();

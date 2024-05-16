@@ -100,7 +100,9 @@ public class GameBU implements Runnable {
         //TODO: Store Step
 
         if (this.gameLiveController != null) {
+            log.debug("broadcastGameStep start");
             this.gameLiveController.broadcastGameStep(this);
+            log.debug("broadcastGameStep done");
         } else {
             log.info("GameLiveController is null. Can't send Websocket Update!");
         }

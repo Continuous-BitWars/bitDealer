@@ -40,9 +40,7 @@ public class GameController {
 
     @Inject
     GameLiveController gameLiveController;
-
-    //TODO: schedule for stop finished games
-
+    
     @PostConstruct
     void postConstruct() {
         GameBU gameBU = this.createGame("Default 1", Config.defaultOptions, Config.defaultMap);

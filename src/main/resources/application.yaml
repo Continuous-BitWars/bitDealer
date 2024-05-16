@@ -26,9 +26,12 @@ quarkus:
           admin: ${API_PASSWORD:admin}
         roles:
           admin: admin
-  cors: false
-  #    origins: "/.*/"
-  #   methods: GET,POST,PUT,DELETE,OPTIONS
+    cors:
+      ~: true
+      origins: http://localhost:4200,https://live.dev.bitwars.online/,https://live.bitwars.online/
+      headers: accept, authorization, content-type, x-requested-with
+      methods: GET, OPTIONS, POST
+
 
   swagger-ui:
     always-include: true

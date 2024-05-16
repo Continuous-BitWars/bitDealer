@@ -80,10 +80,16 @@ public class GameBU implements Runnable {
             log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
             return;
         }
-
+        log.debug("requestPlayerActions: {}", this.getId());
         requestPlayerActions();
+
+        log.debug("getBases: {}", this.getId());
         gameField.getBases().values().forEach(base -> base.takeTick(this.gameConfig.getBaseLevelsConfig()));
+        
+        log.debug("getBoardActions: {}", this.getId());
         gameField.getBoardActions().forEach(boardActions -> boardActions.takeTick(this.gameConfig.getPathsConfig()));
+
+        log.debug("takeFight: {}", this.getId());
         takeFight();
 
         this.gameField.getBases().values().forEach(base -> {

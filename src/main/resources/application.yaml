@@ -17,6 +17,15 @@ quarkus:
           policy: admin-policy
           paths: /*
           methods: POST,PUT,PATCH,DELETE
+    cors:
+      ~: true
+      origins: http://localhost:4200,https://live.dev.bitwars.online,https://live.bitwars.online
+      headers: accept, authorization, content-type, x-requested-with
+      methods: GET, OPTIONS, POST
+      # For Test:
+      # curl -H "Origin: https://live.dev.bitwars.online" --verbose http://localhost:8080/games
+      # check response for access-control-allow-credentials
+
   security:
     users:
       embedded:
@@ -26,9 +35,8 @@ quarkus:
           admin: ${API_PASSWORD:admin}
         roles:
           admin: admin
-    cors:
-      ~: true
-      methods: GET,PUT,POST
+
+
 
   swagger-ui:
     always-include: true

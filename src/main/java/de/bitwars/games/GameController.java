@@ -7,6 +7,7 @@ import de.bitwars.games.moduels.GameMapBU;
 import de.bitwars.games.moduels.GameStatus;
 import de.bitwars.games.moduels.player.DummyPlayer;
 import de.bitwars.live.GameLiveController;
+import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -39,7 +40,7 @@ public class GameController {
 
     @Inject
     GameLiveController gameLiveController;
-    
+
     //TODO: schedule for stop finished games
 
     @PostConstruct
@@ -51,6 +52,16 @@ public class GameController {
         GameBU gameBU1 = this.createGame("Default 2", Config.defaultOptions, Config.defaultMap);
         this.addPlayerToGame(gameBU1.getId(), new DummyPlayer(1001, "#FF0000"));
         this.addPlayerToGame(gameBU1.getId(), new DummyPlayer(1002, "#0000FF"));
+    }
+
+    @Scheduled(delayed = "30s", every = "30s")
+    void cleanupFinishedGames() {
+        log.debug("Scheduled to cleanup finished Games");
+        List<Long> ids = this.games.keySet().stream()
+                .filter(gameBU -> gameBU.getGameStatus().equals(GameStatus.DONE))
+                .map(GameBU::getId).toList();
+        ids.forEach(this::stopGame);
+
     }
 
     public GameBU createGame(String name, GameConfigBU gameConfig, GameMapBU gameMap) {

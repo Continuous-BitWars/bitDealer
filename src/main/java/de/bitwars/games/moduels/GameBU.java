@@ -115,9 +115,10 @@ public class GameBU implements Runnable {
 
     private void releaseAllFreePlayerBases(int size) {
         this.gameMap.getBases().stream()
-                .filter(base -> base.getPlayerId() > players.size())
+                .filter(base -> base.getPlayerId() > size)
                 .map(BaseBU::getUid)
                 .forEach(baseId -> this.gameField.getBases().get(baseId).setPlayerId(0));
+        log.info("releaseAllFreePlayerBases: {}", size);
     }
 
 

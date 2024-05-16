@@ -78,6 +78,7 @@ public class GameBU implements Runnable {
         log.info("Run GameStep for: {} -> {}", this.getId(), this.getName());
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
             log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
+            sendGameStateToWebsocket();
             return;
         }
 
@@ -99,7 +100,13 @@ public class GameBU implements Runnable {
 
 
         //TODO: Store Step
+        sendGameStateToWebsocket();
 
+
+        this.tick++;
+    }
+
+    private void sendGameStateToWebsocket() {
         if (this.gameLiveController != null) {
             log.debug("broadcastGameStep start");
             this.gameLiveController.broadcastGameStep(this);
@@ -107,8 +114,6 @@ public class GameBU implements Runnable {
         } else {
             log.info("GameLiveController is null. Can't send Websocket Update!");
         }
-
-        this.tick++;
     }
 
     private void checkIsDone() {

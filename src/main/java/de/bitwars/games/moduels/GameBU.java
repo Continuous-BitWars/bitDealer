@@ -78,7 +78,6 @@ public class GameBU implements Runnable {
         log.info("Run GameStep for: {} -> {}", this.getId(), this.getName());
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
             log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
-            sendGameStateToWebsocket();
             return;
         }
 

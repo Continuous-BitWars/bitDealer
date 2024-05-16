@@ -26,9 +26,9 @@ quarkus:
           admin: ${API_PASSWORD:admin}
         roles:
           admin: admin
-  cors=true:
-    origins: "/.*/"
-    methods: GET,POST,PUT,DELETE,OPTIONS
+  cors: false
+  #    origins: "/.*/"
+  #   methods: GET,POST,PUT,DELETE,OPTIONS
 
   swagger-ui:
     always-include: true

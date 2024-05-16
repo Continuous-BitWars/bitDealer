@@ -78,6 +78,7 @@ public class GameBU implements Runnable {
         log.info("Run GameStep for: {} -> {}", this.getId(), this.getName());
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
             log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
+            this.sendGameStateToWebsocket();
             return;
         }
         log.debug("requestPlayerActions: {}", this.getId());
@@ -85,7 +86,7 @@ public class GameBU implements Runnable {
 
         log.debug("getBases: {}", this.getId());
         gameField.getBases().values().forEach(base -> base.takeTick(this.gameConfig.getBaseLevelsConfig()));
-        
+
         log.debug("getBoardActions: {}", this.getId());
         gameField.getBoardActions().forEach(boardActions -> boardActions.takeTick(this.gameConfig.getPathsConfig()));
 

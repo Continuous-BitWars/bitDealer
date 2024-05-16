@@ -28,8 +28,8 @@ quarkus:
           admin: admin
     cors:
       ~: true
-      origins: *
-      headers: *
+      origins: "*"
+      headers: "*"
       methods: GET, OPTIONS, POST
 
 

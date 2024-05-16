@@ -10,9 +10,11 @@ import de.bitwars.api.models.clients.Board;
 import de.bitwars.api.models.clients.BoardActions;
 import de.bitwars.api.models.clients.GameConfig;
 import de.bitwars.api.models.clients.Paths;
+import de.bitwars.api.models.clients.PlayerAction;
 import de.bitwars.api.models.clients.Position;
 import de.bitwars.api.models.clients.Progress;
 import de.bitwars.games.moduels.GameBU;
+import de.bitwars.games.moduels.PlayerActionBU;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
@@ -72,4 +74,7 @@ public class GameBUMapper {
         return new Board(boardActions, bases, gameConfig, game);
     }
 
+    public PlayerActionBU toPlayerActionBU(PlayerAction playerAction) {
+        return new PlayerActionBU(playerAction.getSrc(), playerAction.getDest(), playerAction.getAmount());
+    }
 }

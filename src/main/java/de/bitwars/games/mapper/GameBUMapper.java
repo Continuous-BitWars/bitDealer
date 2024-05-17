@@ -33,7 +33,7 @@ public class GameBUMapper {
             case RUNNING -> StatusEnum.RUNNING;
         };
 
-        return new Game(gameBU.getId(), gameBU.getName(), players, gameOptions, statusEnum, gameBU.getTick());
+        return new Game(gameBU.getId(), gameBU.getName(), gameBU.getGameMap().getName(), players, gameOptions, statusEnum, gameBU.getTick());
     }
 
     public Board toBoard(GameBU gameBU, long playerId) {

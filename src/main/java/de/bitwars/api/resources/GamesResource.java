@@ -62,7 +62,7 @@ public class GamesResource implements GamesApi {
 
     @Override
     public Game createGame(Game game) {
-        String mapUrl = game.getMap();
+        String mapUrl = game.getMapURL();
         GameBU gameBU = this.gameController.createGame(game.getName(), Config.defaultOptions, mapController.loadFromUrl(mapUrl));
         return this.gameBUMapper.toGame(gameBU);
     }

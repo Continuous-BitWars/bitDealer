@@ -58,7 +58,7 @@ Vue.createApp({
                 },
                 body: JSON.stringify({
                     "name": this.newGameName,
-                    "map": this.newGameMap,
+                    "mapURL": this.newGameMap,
                 }),
             })
                 .then(response => {

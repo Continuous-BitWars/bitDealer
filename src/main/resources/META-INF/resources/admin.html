@@ -41,6 +41,7 @@
                     <button @click="fetchGameById(selectedGame.id)">reload</button>
                 </h2>
                 <p>Game ID: {{ selectedGame.id }}</p>
+                <p>Map: {{ selectedGame.map_url }}</p>
                 <p>Tick: {{ selectedGame.round_number}}</p>
                 <p>Status: {{ selectedGame.status }}
                     <input type="number" v-model="selectedGame.game_options.time_between_ticks"

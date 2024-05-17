@@ -34,7 +34,7 @@ public class BoardActionsBU {
     }
 
     public void takeTick(GameConfigPathsBU configPaths) {
-        if (isDone()) {
+        if (isInDestination()) {
             log.warn("Calculation over BoardActions in Destination");
             return;
         }
@@ -47,9 +47,5 @@ public class BoardActionsBU {
 
     public boolean isInDestination() {
         return progress.getTraveled() >= progress.getDistance();
-    }
-
-    public boolean isDone() {
-        return progress.getTraveled() > progress.getDistance();
     }
 }

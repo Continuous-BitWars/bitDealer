@@ -101,13 +101,13 @@ public class GameBU implements Runnable {
         });
         log.debug("-----");
 
-        cleanup();
-        checkIsDone();
-
 
         //TODO: Store Step
         sendGameStateToWebsocket();
 
+
+        cleanup();
+        checkIsDone();
 
         this.tick++;
     }
@@ -179,7 +179,7 @@ public class GameBU implements Runnable {
 
     private void cleanup() {
         List<BoardActionsBU> newBoardActions = this.gameField.getBoardActions().stream()
-                .filter(i -> !i.isDone())
+                .filter(i -> !i.isInDestination())
                 .filter(i -> i.getAmount() > 0)
                 .toList();
         gameField.getBoardActions().clear();

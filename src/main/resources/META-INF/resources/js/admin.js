@@ -9,6 +9,7 @@ Vue.createApp({
             newPlayerId: '',
             newPlayerName: '',
             newPlayerURL: '',
+            newGameMap: '',
             newColor: '#FFFFFF',
         };
     },
@@ -57,6 +58,7 @@ Vue.createApp({
                 },
                 body: JSON.stringify({
                     "name": this.newGameName,
+                    "map": this.newGameMap,
                 }),
             })
                 .then(response => {

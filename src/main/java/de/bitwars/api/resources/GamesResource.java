@@ -22,6 +22,7 @@ import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
 import de.bitwars.games.Config;
 import de.bitwars.games.GameController;
+import de.bitwars.games.MapController;
 import de.bitwars.games.mapper.GameBUMapper;
 import de.bitwars.games.moduels.ActionProvider;
 import de.bitwars.games.moduels.GameBU;
@@ -40,6 +41,7 @@ public class GamesResource implements GamesApi {
     private final GameController gameController;
     private final GameBUMapper gameBUMapper;
     private final PlayersResource playersResource;
+    private final MapController mapController;
 
     @Override
     public Game addPlayerToGame(Integer gameId, Player player) {
@@ -60,7 +62,8 @@ public class GamesResource implements GamesApi {
 
     @Override
     public Game createGame(Game game) {
-        GameBU gameBU = this.gameController.createGame(game.getName(), Config.defaultOptions, Config.defaultMap);
+        String mapUrl = game.getMap();
+        GameBU gameBU = this.gameController.createGame(game.getName(), Config.defaultOptions, mapController.loadFromUrl(mapUrl));
         return this.gameBUMapper.toGame(gameBU);
     }
 

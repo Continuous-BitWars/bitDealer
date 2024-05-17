@@ -32,6 +32,7 @@ import java.util.List;
 public class Game {
     private Long id;
     private String name;
+    private String map;
     private List<Player> players = new ArrayList<>();
     private GameOptions gameOptions;
 

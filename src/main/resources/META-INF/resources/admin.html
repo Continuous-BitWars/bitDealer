@@ -84,6 +84,8 @@
                 <form @submit.prevent="createGame">
                     <label for="gameName">Game Name:</label>
                     <input type="text" id="gameName" v-model="newGameName" required>
+                    <label for="gameName">Map URl:</label>
+                    <input type="text" id="newGameMap" v-model="newGameMap" required>
                     <button type="submit">Create</button>
                     <button @click="cancelCreateGame">Cancel</button>
                 </form>

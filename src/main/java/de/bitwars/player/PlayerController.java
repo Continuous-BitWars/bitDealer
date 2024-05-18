@@ -59,6 +59,7 @@ public class PlayerController {
             PlayerDAO player = playerDAO.get();
             player.setName(newPlayer.getName());
             player.setProviderUrl(newPlayer.getProviderUrl());
+            player.setColor(newPlayer.getColor());
             return player;
         }
         throw new NotFoundException(String.format("Player with id %s not found", newPlayer.getId()));

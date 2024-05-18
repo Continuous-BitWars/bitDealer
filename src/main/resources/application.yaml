@@ -87,6 +87,8 @@ quarkus:
     category:
       "de.bitwars":
         level: DEBUG
+      "de.bitwars.live":
+        level: INFO
 
 tournament:
   sleep:

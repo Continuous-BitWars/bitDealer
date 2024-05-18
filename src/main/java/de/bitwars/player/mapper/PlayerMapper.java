@@ -37,6 +37,7 @@ public class PlayerMapper {
                 final PlayerDAO myPlayerDAO = playerDAO.get();
                 myPlayerDAO.setName(player.getName());
                 myPlayerDAO.setProviderUrl(player.getProviderUrl());
+                myPlayerDAO.setColor(player.getColor());
                 return myPlayerDAO;
             }
         }

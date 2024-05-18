@@ -188,7 +188,8 @@ public class GameBU implements Runnable {
 
     private boolean verifyPlayerAction(BaseBU baseBU, long playerId, PlayerActionBU playerAction) {
         return baseBU.getPlayerId() == playerId &&
-                baseBU.getPopulation() >= playerAction.getAmount();
+                baseBU.getPopulation() >= playerAction.getAmount() &&
+                playerAction.getAmount() > 0;
     }
 
     public void removePlayer(long playerId) {

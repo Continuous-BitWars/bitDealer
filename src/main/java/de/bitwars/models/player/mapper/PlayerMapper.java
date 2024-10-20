@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.bitwars.player.mapper;
+package de.bitwars.models.player.mapper;
 
 import de.bitwars.api.models.Player;
-import de.bitwars.player.dao.PlayerDAO;
-import de.bitwars.player.repository.PlayerRepository;
+import de.bitwars.models.player.dao.PlayerDAO;
+import de.bitwars.models.player.repository.PlayerRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 

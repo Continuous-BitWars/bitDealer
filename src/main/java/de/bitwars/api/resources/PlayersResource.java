@@ -18,9 +18,9 @@ package de.bitwars.api.resources;
 
 import de.bitwars.api.interfaces.PlayersApi;
 import de.bitwars.api.models.Player;
-import de.bitwars.player.PlayerController;
-import de.bitwars.player.dao.PlayerDAO;
-import de.bitwars.player.mapper.PlayerMapper;
+import de.bitwars.models.player.PlayerController;
+import de.bitwars.models.player.dao.PlayerDAO;
+import de.bitwars.models.player.mapper.PlayerMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -14,12 +14,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.bitwars.player.repository;
+package de.bitwars.models.player.dao;
 
-import de.bitwars.player.dao.PlayerDAO;
-import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@ApplicationScoped
-public class PlayerRepository implements PanacheRepository<PlayerDAO> {
+@Entity(name = "player")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class PlayerDAO {
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String name;
+    private String providerUrl;
+    private String color;
 }

@@ -27,13 +27,13 @@ public class GameLiveSocket {
 
     @OnOpen
     public void onOpen(Session session) {
-        log.info("onOpen {}", session.getId());
+        log.debug("onOpen {}", session.getId());
     }
 
     @OnClose
     public void onClose(Session session) {
         this.gameLiveController.unsubscribeAll(session);
-        log.info("onClose {}", session.getId());
+        log.debug("onClose {}", session.getId());
     }
 
     @OnError
@@ -44,12 +44,12 @@ public class GameLiveSocket {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("onMessage {} {}", session.getId(), message);
+        log.debug("onMessage {} {}", session.getId(), message);
 
         try {
             PubSubMessage pubSubMessage = objectMapper.readValue(message, PubSubMessage.class);
             String pubSubMessageString = pubSubMessage.getMessage().toString();
-            log.info("pubSubMessage {} {}: {}", session.getId(), pubSubMessage.getTopic(), pubSubMessageString);
+            log.debug("pubSubMessage {} {}: {}", session.getId(), pubSubMessage.getTopic(), pubSubMessageString);
 
             String[] topic = pubSubMessage.getTopic().split("_");
             if (topic.length == 2 && topic[0].equals("game")) {

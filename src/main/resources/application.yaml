@@ -89,6 +89,8 @@ quarkus:
         level: DEBUG
       "de.bitwars.live":
         level: INFO
+      "de.bitwars.api.resources":
+        level: INFO
 
 tournament:
   sleep:

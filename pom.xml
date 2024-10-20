@@ -140,7 +140,7 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk18on</artifactId>
-            <version>1.76</version>
+            <version>1.78</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
@@ -157,7 +157,7 @@
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
             <scope>test</scope>
-            <version>3.5.3</version>
+            <version>3.9.1</version>
         </dependency>
 
     </dependencies>

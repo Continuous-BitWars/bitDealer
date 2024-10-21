@@ -1,8 +1,8 @@
-package de.bitwars.games;
+package de.bitwars.models.game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import de.bitwars.games.moduels.GameMapBU;
+import de.bitwars.models.game.moduels.GameMapBU;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

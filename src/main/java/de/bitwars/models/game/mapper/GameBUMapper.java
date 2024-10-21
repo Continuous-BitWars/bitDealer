@@ -1,4 +1,4 @@
-package de.bitwars.games.mapper;
+package de.bitwars.models.game.mapper;
 
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
@@ -13,8 +13,8 @@ import de.bitwars.api.models.clients.Paths;
 import de.bitwars.api.models.clients.PlayerAction;
 import de.bitwars.api.models.clients.Position;
 import de.bitwars.api.models.clients.Progress;
-import de.bitwars.games.moduels.GameBU;
-import de.bitwars.games.moduels.PlayerActionBU;
+import de.bitwars.models.game.moduels.GameBU;
+import de.bitwars.models.game.moduels.PlayerActionBU;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;

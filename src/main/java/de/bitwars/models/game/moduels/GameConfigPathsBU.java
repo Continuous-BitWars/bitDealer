@@ -1,4 +1,4 @@
-package de.bitwars.games.moduels;
+package de.bitwars.models.game.moduels;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GameConfigBaseLevelsBU {
-    private int maxPopulation;
-    private int upgradeCost;
-    private int spawnRate;
+public class GameConfigPathsBU {
+    private int gracePeriod;
+    private int deathRate;
 }

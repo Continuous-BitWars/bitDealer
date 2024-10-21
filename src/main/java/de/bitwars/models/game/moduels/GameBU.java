@@ -1,4 +1,4 @@
-package de.bitwars.games.moduels;
+package de.bitwars.models.game.moduels;
 
 import de.bitwars.live.GameLiveController;
 import lombok.AllArgsConstructor;

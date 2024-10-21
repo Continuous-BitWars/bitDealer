@@ -1,11 +1,11 @@
-package de.bitwars.games.moduels.player;
+package de.bitwars.models.game.moduels.player;
 
 import de.bitwars.api.models.clients.Board;
 import de.bitwars.api.models.clients.PlayerAction;
-import de.bitwars.games.mapper.GameBUMapper;
-import de.bitwars.games.moduels.ActionProvider;
-import de.bitwars.games.moduels.GameBU;
-import de.bitwars.games.moduels.PlayerActionBU;
+import de.bitwars.models.game.mapper.GameBUMapper;
+import de.bitwars.models.game.moduels.ActionProvider;
+import de.bitwars.models.game.moduels.GameBU;
+import de.bitwars.models.game.moduels.PlayerActionBU;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

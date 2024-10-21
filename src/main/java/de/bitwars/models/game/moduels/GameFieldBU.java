@@ -1,4 +1,4 @@
-package de.bitwars.games.moduels;
+package de.bitwars.models.game.moduels;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

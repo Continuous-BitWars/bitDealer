@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.bitwars.games.moduels.player;
+package de.bitwars.models.game.moduels.player;
 
 import de.bitwars.api.models.clients.Board;
 import de.bitwars.api.models.clients.PlayerAction;

@@ -1,9 +1,9 @@
-package de.bitwars.games.moduels.player;
+package de.bitwars.models.game.moduels.player;
 
-import de.bitwars.games.moduels.ActionProvider;
-import de.bitwars.games.moduels.BaseBU;
-import de.bitwars.games.moduels.GameBU;
-import de.bitwars.games.moduels.PlayerActionBU;
+import de.bitwars.models.game.moduels.ActionProvider;
+import de.bitwars.models.game.moduels.BaseBU;
+import de.bitwars.models.game.moduels.GameBU;
+import de.bitwars.models.game.moduels.PlayerActionBU;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

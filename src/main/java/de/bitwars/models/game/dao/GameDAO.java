@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.bitwars.games.dao;
+package de.bitwars.models.game.dao;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

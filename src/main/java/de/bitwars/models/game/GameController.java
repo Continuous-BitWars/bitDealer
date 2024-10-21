@@ -1,12 +1,12 @@
-package de.bitwars.games;
+package de.bitwars.models.game;
 
-import de.bitwars.games.moduels.ActionProvider;
-import de.bitwars.games.moduels.GameBU;
-import de.bitwars.games.moduels.GameConfigBU;
-import de.bitwars.games.moduels.GameMapBU;
-import de.bitwars.games.moduels.GameStatus;
-import de.bitwars.games.moduels.player.DummyPlayer;
 import de.bitwars.live.GameLiveController;
+import de.bitwars.models.game.moduels.ActionProvider;
+import de.bitwars.models.game.moduels.GameBU;
+import de.bitwars.models.game.moduels.GameConfigBU;
+import de.bitwars.models.game.moduels.GameMapBU;
+import de.bitwars.models.game.moduels.GameStatus;
+import de.bitwars.models.game.moduels.player.DummyPlayer;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -40,7 +40,7 @@ public class GameController {
 
     @Inject
     GameLiveController gameLiveController;
-    
+
     @PostConstruct
     void postConstruct() {
         GameBU gameBU = this.createGame("Default 1", Config.defaultOptions, Config.defaultMap);

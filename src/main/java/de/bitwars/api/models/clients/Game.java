@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class Game {
     private long uid;
-    private long tick;
+    private int tick;
     private int playerCount;
     private int remainingPlayers;
     private long player;

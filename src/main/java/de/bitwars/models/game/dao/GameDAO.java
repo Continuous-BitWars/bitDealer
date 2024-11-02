@@ -57,7 +57,7 @@ public class GameDAO {
     )
     private List<PlayerDAO> players;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
     private List<GameTickDAO> gameTicks;
 
     public GameDAO(String name, GameMapDAO gameMapDAO) {

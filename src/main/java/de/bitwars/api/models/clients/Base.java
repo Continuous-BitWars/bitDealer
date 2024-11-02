@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Base {
-    private long uid;
+    private int uid;
     private long player;
     private int population;
     private int level;

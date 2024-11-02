@@ -55,9 +55,7 @@ public class GameLogic {
         GameBU gameBU = gameBUFactory.createGameBU(gameDAO);
         gameBU.setGameConfig(Config.defaultOptions);//TODO add GameCodnif To Game
         gameBU.setGameMap(Config.defaultMap);
-
-        gameDAO.getLastGameTick().ifPresent(gameBU::loadGame);
-
+        
         gameDAO.getPlayers().forEach(playerDAO -> {
             LOGGER.info("Add Player to Game: {} -> {}", gameBU.getId(), gameBU.getName());
 
@@ -66,10 +64,12 @@ public class GameLogic {
             if (playerDAO.getProviderUrl().startsWith("http")) {
                 actionProvider = new RemotePlayer(playerDAO.getId(), playerDAO.getName(), playerDAO.getProviderUrl(), playerDAO.getColor());
             } else {
-                actionProvider = new DummyPlayer(playerDAO.getId(), playerDAO.getColor());
+                actionProvider = new DummyPlayer(playerDAO.getId() + 1000, playerDAO.getColor());
             }
             gameBU.addPlayer(actionProvider);
         });
+
+        gameDAO.getLastGameTick().ifPresent(gameBU::loadGame);
 
         gameBU.setupGameField();
 

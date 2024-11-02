@@ -17,7 +17,9 @@ public class GameMapLoader {
     public static String fetchJsonFromUrl(String url) {
         LOGGER.info("Fetching JSON from {}", url);
         try (Scanner scanner = new Scanner(new URL(url).openStream(), StandardCharsets.UTF_8)) {
-            return scanner.useDelimiter("\\A").next();
+            String jsonString = scanner.useDelimiter("\\A").next();
+            jsonString = jsonString.replaceAll("\\s+", "");
+            return jsonString;
         } catch (Exception e) {
             LOGGER.error("Failed to fetch JSON from {}", url, e);
             return null;

@@ -1,4 +1,4 @@
-package de.bitwars.models.game.moduels;
+package de.bitwars.business_logic.moduels;
 
 public enum GameStatus {
     RUNNING,

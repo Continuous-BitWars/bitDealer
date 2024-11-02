@@ -16,13 +16,20 @@
  */
 package de.bitwars.models.game.dao;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import de.bitwars.api.models.StatusEnum;
+import de.bitwars.models.gameMap.dao.GameMapDAO;
+import de.bitwars.models.gameTick.dao.GameTickDAO;
+import de.bitwars.models.player.dao.PlayerDAO;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Entity(name = "games")
 @AllArgsConstructor
@@ -35,8 +42,51 @@ public class GameDAO {
     private Long id;
     private String name;
     private int timeBetweenTicks;
-    private int mapId;
 
-    private int status;
+    @ManyToOne
+    private GameMapDAO map;
+
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "games_player",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id")
+    )
+    private List<PlayerDAO> players;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<GameTickDAO> gameTicks;
+
+    public GameDAO(String name, GameMapDAO gameMapDAO) {
+        this.name = name;
+        this.map = gameMapDAO;
+
+        this.id = null;
+        this.timeBetweenTicks = 1;
+        this.status = StatusEnum.PENDING;
+        this.players = new ArrayList<>();
+        this.gameTicks = new ArrayList<>();
+    }
+
+
+    public boolean removePlayerById(long playerId) {
+        if (players != null) {
+            return players.removeIf(player -> player.getId().equals(playerId));
+        }
+        return false;
+    }
+
+    public Optional<GameTickDAO> getLastGameTick() {
+        if (gameTicks != null && !gameTicks.isEmpty()) {
+            return gameTicks.stream()
+                    .max(Comparator.comparingLong(GameTickDAO::getTick));
+        }
+        return Optional.empty();
+    }
+
+    //TODO: store losing player with gametickID for Scorboard
 }
 

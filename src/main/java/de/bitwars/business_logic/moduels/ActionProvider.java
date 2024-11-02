@@ -1,4 +1,4 @@
-package de.bitwars.models.game.moduels;
+package de.bitwars.business_logic.moduels;
 
 import java.util.List;
 

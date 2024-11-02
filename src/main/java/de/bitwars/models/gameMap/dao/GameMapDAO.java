@@ -16,6 +16,7 @@
  */
 package de.bitwars.models.gameMap.dao;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -34,6 +35,7 @@ public class GameMapDAO {
     @GeneratedValue
     private Long id;
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String jsonString;
     private int maxPlayerCount;
     private String providerUrl;

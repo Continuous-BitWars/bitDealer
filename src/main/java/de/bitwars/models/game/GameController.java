@@ -1,126 +1,182 @@
 package de.bitwars.models.game;
 
-import de.bitwars.live.GameLiveController;
-import de.bitwars.models.game.moduels.ActionProvider;
-import de.bitwars.models.game.moduels.GameBU;
-import de.bitwars.models.game.moduels.GameConfigBU;
-import de.bitwars.models.game.moduels.GameMapBU;
-import de.bitwars.models.game.moduels.GameStatus;
-import de.bitwars.models.game.moduels.player.DummyPlayer;
-import io.quarkus.scheduler.Scheduled;
-import jakarta.annotation.PostConstruct;
+import de.bitwars.api.models.StatusEnum;
+import de.bitwars.business_logic.GameLogic;
+import de.bitwars.models.game.dao.GameDAO;
+import de.bitwars.models.game.repository.GameRepository;
+import de.bitwars.models.gameMap.GameMapController;
+import de.bitwars.models.gameMap.dao.GameMapDAO;
+import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.Objects;
+import java.util.Optional;
 
 @ApplicationScoped
 public class GameController {
 
-    private static final Logger log = LoggerFactory.getLogger(GameController.class);
-    private static long idSequence = 1;
-
-    @ConfigProperty(name = "game.executor.poolsize")
-    int executorPoolSize;
-
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(executorPoolSize);
-    private final Map<GameBU, ScheduledFuture<?>> games = new TreeMap<>(Comparator.comparing(GameBU::getId));
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 
     @Inject
-    GameLiveController gameLiveController;
+    GameRepository gameRepository;
+    @Inject
+    GameLogic gameLogic;
+    @Inject
+    GameMapController gameMapController;
 
-    @PostConstruct
-    void postConstruct() {
-        GameBU gameBU = this.createGame("Default 1", Config.defaultOptions, Config.defaultMap);
-        this.addPlayerToGame(gameBU.getId(), new DummyPlayer(1001, "#FF0000"));
-        this.addPlayerToGame(gameBU.getId(), new DummyPlayer(1002, "#0000FF"));
 
-        GameBU gameBU1 = this.createGame("Default 2", Config.defaultOptions, Config.defaultMap);
-        this.addPlayerToGame(gameBU1.getId(), new DummyPlayer(1001, "#FF0000"));
-        this.addPlayerToGame(gameBU1.getId(), new DummyPlayer(1002, "#0000FF"));
-    }
-
-    @Scheduled(delayed = "30s", every = "30s")
-    void cleanupFinishedGames() {
-        log.debug("Scheduled to cleanup finished Games");
-        List<Long> ids = this.games.keySet().stream()
-                .filter(gameBU -> gameBU.getGameStatus().equals(GameStatus.DONE))
-                .map(GameBU::getId).toList();
-        ids.forEach(this::stopGame);
-
-    }
-
-    public GameBU createGame(String name, GameConfigBU gameConfig, GameMapBU gameMap) {
-        GameBU game = new GameBU(idSequence++, name, gameConfig, gameMap, gameLiveController);
-        this.games.put(game, null);
-        return game;
-    }
-
-    public List<GameBU> getGames() {
-        return this.games.keySet().stream().toList();
-    }
-
-    public boolean deleteGame(long gameId) {
-        ScheduledFuture<?> scheduledFuture = this.games.remove(getGameById(gameId));
-        if (scheduledFuture != null) {
-            scheduledFuture.cancel(true);
+    @Transactional
+    public GameDAO createGame(String name, Long mapId) {
+        Optional<GameMapDAO> gameMapDAO = gameMapController.getGameMapById(mapId);
+        if (gameMapDAO.isEmpty()) {
+            //TODO: Create GameMap is not exist???
+            throw new NotFoundException(String.format("GameMap with id %d not found", mapId));
         }
-        return true;
+        GameDAO gameDAO = new GameDAO(name, gameMapDAO.get());
+        gameRepository.persist(gameDAO);
+        return gameDAO;
     }
 
-    public GameBU getGameById(long gameId) {
-        return this.games.keySet().stream().filter(gameBU -> gameBU.getId() == gameId).findFirst().orElseThrow(NotFoundException::new);
-    }
-
-    public GameBU addPlayerToGame(long gameId, ActionProvider actionProvider) {
-        GameBU gameBU = this.getGameById(gameId);
-        gameBU.addPlayer(actionProvider);
-        return gameBU;
-    }
-
-    public GameBU removePlayerFromGame(long gameId, long playerId) {
-        GameBU gameBU = this.getGameById(gameId);
-        gameBU.removePlayer(playerId);
-        return gameBU;
-    }
-
-    public GameBU startGame(long gameId, long timeBetweenTicksInSeconds) {
-        GameBU gameBU = this.getGameById(gameId);
-        log.info("Try start Game: {} -> {}", gameBU.getId(), gameBU.getName());
-
-        synchronized (this) {
-            if (this.games.get(gameBU) == null || this.games.get(gameBU).isCancelled()) {
-                gameBU.setTickSpeed(Duration.ofSeconds(timeBetweenTicksInSeconds));
-                gameBU.setGameStatus(GameStatus.RUNNING);
-                this.games.put(gameBU, this.scheduler.scheduleAtFixedRate(gameBU, 0, gameBU.getTickSpeed().getSeconds(), TimeUnit.SECONDS));
+    @Transactional
+    public void deleteGame(long gameId) {
+        Optional<GameDAO> gameDAO = getGameById(gameId);
+        if (gameDAO.isPresent()) {
+            GameDAO game = gameDAO.get();
+            if (game.getStatus().equals(StatusEnum.PENDING)) {
+                gameRepository.delete(game);
             } else {
-                log.info("Error by start Game: {} -> {}", gameBU.getId(), gameBU.getName());
+                throw new IllegalStateException(String.format("Can't delete Game with id %d, game is running.", gameId));
             }
+        } else {
+            throw new NotFoundException(String.format("Game with id %d not found", gameId));
         }
-        log.info("Started Game: {} -> {}", gameBU.getId(), gameBU.getName());
-        return gameBU;
     }
 
-    public GameBU stopGame(long gameId) {
-        GameBU gameBU = this.getGameById(gameId);
-
-        if (gameBU != null) {
-            this.games.get(gameBU).cancel(true);
-            this.games.put(gameBU, null);
-            gameBU.setGameStatus(GameStatus.STOPPED);
-        }
-        return gameBU;
+    public Optional<GameDAO> getGameById(long gameId) {
+        return gameRepository.findByIdOptional(gameId);
     }
+
+    public List<GameDAO> listGames() {
+        return gameRepository.listAll();
+    }
+
+    @Transactional
+    public GameDAO addPlayerToGame(long gameId, PlayerDAO playerDAO) {
+        Optional<GameDAO> game = getGameById(gameId);
+        if (game.isPresent()) {
+            GameDAO gameDAO = game.get();
+
+            if (gameDAO.getStatus().equals(StatusEnum.PENDING)) {
+                gameDAO.getPlayers().add(playerDAO);
+            } else {
+                throw new IllegalStateException("Game is running.");
+            }
+            return gameDAO;
+        }
+        throw new NotFoundException(String.format("Game with id %d not found.", gameId));
+    }
+
+    @Transactional
+    public GameDAO removePlayerFromGame(long gameId, long playerId) {
+        Optional<GameDAO> game = getGameById(gameId);
+        if (game.isPresent()) {
+            GameDAO gameDAO = game.get();
+
+            if (gameDAO.getStatus().equals(StatusEnum.PENDING)) {
+                boolean succeed = gameDAO.removePlayerById(playerId);
+                if (!succeed) {
+                    throw new IllegalArgumentException("Player not found.");
+                }
+            } else {
+                throw new IllegalStateException("Game is running.");
+            }
+            return gameDAO;
+        }
+        throw new NotFoundException(String.format("Game with id %d not found.", gameId));
+    }
+
+    @Transactional
+    public GameDAO startGame(long gameId, int timeBetweenTicks) {
+        Optional<GameDAO> game = getGameById(gameId);
+        if (game.isPresent()) {
+            GameDAO gameDAO = game.get();
+
+
+            if (gameDAO.getStatus().equals(StatusEnum.DONE)) {
+                LOGGER.info("[{}] Game already done.", gameId);
+                throw new IllegalStateException("Game already Done.");
+            }
+            if (gameDAO.getStatus().equals(StatusEnum.RUNNING)) {
+                LOGGER.info("[{}] Game already running.", gameId);
+                throw new IllegalStateException("Game already running.");
+            }
+            if (gameDAO.getPlayers().size() < 2) {
+                LOGGER.info("[{}] Game has to less Players than 2.", gameId);
+                throw new IllegalStateException("Game has to less Players than 2.");
+            }
+            if (timeBetweenTicks <= 0) {
+                LOGGER.info("[{}] Time between ticks must be greater than zero.", gameId);
+                throw new IllegalStateException("Time between ticks must be greater than zero.");
+            }
+
+            gameDAO.setTimeBetweenTicks(timeBetweenTicks);
+
+
+            boolean succeed = gameLogic.startGame(gameDAO);
+            if (!succeed) {
+                throw new RuntimeException(String.format("Can't start game with id %d.", gameId));
+            }
+            return gameDAO;
+        }
+        throw new NotFoundException(String.format("Game with id %d not found.", gameId));
+    }
+
+    @Transactional
+    public GameDAO stopGame(long gameId) {
+        Optional<GameDAO> game = getGameById(gameId);
+        if (game.isPresent()) {
+            GameDAO gameDAO = game.get();
+
+            if (!gameDAO.getStatus().equals(StatusEnum.RUNNING)) {
+                throw new IllegalStateException("Game is not Running.");
+            }
+
+            boolean succeed = gameLogic.stopGame(gameDAO.getId());
+            gameDAO.setStatus(StatusEnum.STOPPED);
+            if (!succeed) {
+                LOGGER.info("[{}] Stopping was not successfully for Game!.", gameId);
+            }
+            return gameDAO;
+        }
+        LOGGER.info("[{}] Game not found to stop.", gameId);
+        throw new NotFoundException("Game not found.");
+    }
+
+    @Transactional
+    public GameDAO updateGame(GameDAO newGame) {
+        Optional<GameDAO> gameDAO = gameRepository.findByIdOptional(newGame.getId());
+        if (gameDAO.isPresent()) {
+            GameDAO game = gameDAO.get();
+
+            if (!game.getStatus().equals(StatusEnum.PENDING)) {
+                throw new IllegalStateException("Game is Running.");
+            }
+            game.setName(newGame.getName());
+
+            if (!Objects.equals(newGame.getMap().getId(), game.getMap().getId())) {
+                Optional<GameMapDAO> gameMapDAO = gameMapController.getGameMapById(newGame.getMap().getId());
+                gameMapDAO.ifPresent(game::setMap);
+            }
+            return game;
+        }
+        throw new NotFoundException("Game not found.");
+    }
+
+
 }

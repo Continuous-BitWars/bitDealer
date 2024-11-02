@@ -16,6 +16,7 @@
  */
 package de.bitwars.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GameOptions {
-    private Integer timeBetweenTicks;
+    @JsonProperty("time_between_ticks")
+    private int timeBetweenTicks;
 }
 

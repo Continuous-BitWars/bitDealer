@@ -72,8 +72,8 @@ public class LeagueController {
             myLeagueDAO.setName(newLeagueDAO.getName());
             myLeagueDAO.setParallelGames(newLeagueDAO.getParallelGames());
 
-            myLeagueDAO.setGameMaps(newLeagueDAO.getGameMaps());
-            myLeagueDAO.setPlayers(newLeagueDAO.getPlayers());
+            //myLeagueDAO.setGameMaps(newLeagueDAO.getGameMaps());
+            //myLeagueDAO.setPlayers(newLeagueDAO.getPlayers());
             //TODO: add game!
 
             return myLeagueDAO;
@@ -82,6 +82,7 @@ public class LeagueController {
 
     }
 
+    @Transactional
     public LeagueDAO startLeague(long leagueId) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
         if (leagueDAOOptional.isPresent()) {
@@ -92,6 +93,7 @@ public class LeagueController {
         throw new NotFoundException(String.format("League with id %s not found", leagueId));
     }
 
+    @Transactional
     public LeagueDAO stopLeague(long leagueId) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
         if (leagueDAOOptional.isPresent()) {
@@ -102,22 +104,8 @@ public class LeagueController {
         throw new NotFoundException(String.format("League with id %s not found", leagueId));
     }
 
-    public LeagueDAO addPlayer(long leagueId, PlayerDAO newPlayerDAO) {
-        Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
-        Optional<PlayerDAO> playerDAOOptional = playerController.getPlayerById(newPlayerDAO.getId());
-
-        if (leagueDAOOptional.isPresent() && playerDAOOptional.isPresent()) {
-            LeagueDAO leagueDAO = leagueDAOOptional.get();
-            PlayerDAO playerDAO = playerDAOOptional.get();
-
-            List<PlayerDAO> playerDAOs = leagueDAO.getPlayers();
-            playerDAOs.add(playerDAO);
-            leagueDAO.setPlayers(playerDAOs);
-        }
-        throw new NotFoundException(String.format("League or Player with id %d or %d not found", leagueId, newPlayerDAO.getId()));
-    }
-
-    public LeagueDAO deletePlayer(long leagueId, long playerId) {
+    @Transactional
+    public LeagueDAO addPlayer(long leagueId, long playerId) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
         Optional<PlayerDAO> playerDAOOptional = playerController.getPlayerById(playerId);
 
@@ -125,29 +113,29 @@ public class LeagueController {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
             PlayerDAO playerDAO = playerDAOOptional.get();
 
-            List<PlayerDAO> playerDAOs = leagueDAO.getPlayers();
-            playerDAOs.remove(playerDAO);
-            leagueDAO.setPlayers(playerDAOs);
+            leagueDAO.getPlayers().add(playerDAO);
+
+            return leagueDAO;
         }
         throw new NotFoundException(String.format("League or Player with id %d or %d not found", leagueId, playerId));
     }
 
-    public LeagueDAO addGameMap(long leagueId, GameMapDAO newGameMapDAO) {
+    @Transactional
+    public LeagueDAO deletePlayer(long leagueId, long playerId) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
-        Optional<GameMapDAO> gameMapDAOOptional = gameMapController.getGameMapById(newGameMapDAO.getId());
 
-        if (leagueDAOOptional.isPresent() && gameMapDAOOptional.isPresent()) {
+        if (leagueDAOOptional.isPresent() && playerId > 0) {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
-            GameMapDAO gameMapDAO = gameMapDAOOptional.get();
 
-            List<GameMapDAO> gameMapDAOs = leagueDAO.getGameMaps();
-            gameMapDAOs.add(gameMapDAO);
-            leagueDAO.setGameMaps(gameMapDAOs);
+            leagueDAO.getPlayers().removeIf(p -> p.getId() == playerId);
+
+            return leagueDAO;
         }
-        throw new NotFoundException(String.format("League or GameMap with id %d or %d not found", leagueId, newGameMapDAO.getId()));
+        throw new NotFoundException(String.format("League or Player with id %d or %d not found", leagueId, playerId));
     }
 
-    public LeagueDAO deleteGameMap(long leagueId, long gameMapId) {
+    @Transactional
+    public LeagueDAO addGameMap(long leagueId, long gameMapId) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
         Optional<GameMapDAO> gameMapDAOOptional = gameMapController.getGameMapById(gameMapId);
 
@@ -155,9 +143,24 @@ public class LeagueController {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
             GameMapDAO gameMapDAO = gameMapDAOOptional.get();
 
-            List<GameMapDAO> gameMapDAOs = leagueDAO.getGameMaps();
-            gameMapDAOs.remove(gameMapDAO);
-            leagueDAO.setGameMaps(gameMapDAOs);
+            leagueDAO.getGameMaps().add(gameMapDAO);
+
+            return leagueDAO;
+        }
+        throw new NotFoundException(String.format("League or GameMap with id %d or %d not found", leagueId, gameMapId));
+    }
+
+    @Transactional
+    public LeagueDAO deleteGameMap(long leagueId, long gameMapId) {
+        Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
+
+        if (leagueDAOOptional.isPresent() && gameMapId > 0) {
+            LeagueDAO leagueDAO = leagueDAOOptional.get();
+
+            boolean isSuccess = leagueDAO.getGameMaps().removeIf(gameMap -> gameMap.getId() == gameMapId);
+            if (isSuccess) {
+                return leagueDAO;
+            }
         }
         throw new NotFoundException(String.format("League or GameMap with id %d or %d not found", leagueId, gameMapId));
     }

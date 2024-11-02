@@ -1,11 +1,12 @@
-package de.bitwars.models.game.moduels.player;
+package de.bitwars.business_logic.moduels.player;
 
 import de.bitwars.api.models.clients.Board;
 import de.bitwars.api.models.clients.PlayerAction;
-import de.bitwars.models.game.mapper.GameBUMapper;
-import de.bitwars.models.game.moduels.ActionProvider;
-import de.bitwars.models.game.moduels.GameBU;
-import de.bitwars.models.game.moduels.PlayerActionBU;
+import de.bitwars.business_logic.mapper.GameBUMapper;
+import de.bitwars.business_logic.moduels.ActionProvider;
+import de.bitwars.business_logic.moduels.GameBU;
+import de.bitwars.business_logic.moduels.PlayerActionBU;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,14 +27,15 @@ public class RemotePlayer implements ActionProvider {
     private final String url;
     private final String color;
 
+    @Inject
     GameBUMapper gameBUMapper;
 
-    public RemotePlayer(long id, String name, String url, String color, GameBUMapper gameBUMapper) {
+
+    public RemotePlayer(long id, String name, String url, String color) {
         this.id = id;
         this.name = name;
         this.url = url;
         this.color = color;
-        this.gameBUMapper = gameBUMapper;
     }
 
     @Override

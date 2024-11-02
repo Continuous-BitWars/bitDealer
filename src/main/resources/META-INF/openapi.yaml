@@ -337,9 +337,6 @@ components:
           items:
             $ref: '#/components/schemas/Player'
           readOnly: true
-        game_options:
-          $ref: '#/components/schemas/GameOptions'
-          readOnly: true
         status:
           type: string
           enum: [ running, stopped, done ]
@@ -377,10 +374,9 @@ components:
     GameOptions:
       type: object
       required:
-        - stepSleepDuration
-        - gameRoundSleepDuration
+        - time_between_ticks
       properties:
-        step_sleep_duration:
+        time_between_ticks:
           description: wait time beetween steps in secends
           type: integer
           example: 1

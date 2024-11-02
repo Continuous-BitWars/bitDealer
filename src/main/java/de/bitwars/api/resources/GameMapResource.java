@@ -18,6 +18,7 @@ package de.bitwars.api.resources;
 
 import de.bitwars.api.interfaces.GameMapApi;
 import de.bitwars.api.models.GameMap;
+import de.bitwars.api.models.GameMapJson;
 import de.bitwars.models.gameMap.GameMapController;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.gameMap.mapper.GameMapMapper;
@@ -55,6 +56,22 @@ public class GameMapResource implements GameMapApi {
             throw new NotFoundException();
         }
         return gameMapMapper.toGameMap(gameMapDAO.get());
+    }
+
+    @Override
+    public GameMapJson getGameMapJsonById(long mapId) {
+        Optional<GameMapDAO> gameMapDAO = gameMapController.getGameMapById(mapId);
+        if (gameMapDAO.isEmpty()) {
+            throw new NotFoundException();
+        }
+        GameMapDAO dao = gameMapDAO.get();
+        return new GameMapJson(dao.getId(), dao.getJsonString());
+    }
+
+    @Override
+    public GameMapJson updateGameMapJsonById(long mapId, GameMapJson gameMapJson) {
+        GameMapDAO gameMapDAO = gameMapController.updateGameMapJsonById(mapId, gameMapJson.getValue());
+        return new GameMapJson(gameMapDAO.getId(), gameMapDAO.getJsonString());
     }
 
     @Override

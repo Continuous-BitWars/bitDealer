@@ -16,6 +16,7 @@
  */
 package de.bitwars.api.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,29 +33,25 @@ import java.util.List;
 public class Game {
     private Long id;
     private String name;
-    private String mapURL;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<Player> players = new ArrayList<>();
+
+    @JsonProperty("game_map")
+    private GameMap gameMap;
+    //TODO: add GameConfig
+
+    @JsonProperty(value = "game_options", access = JsonProperty.Access.READ_ONLY)
     private GameOptions gameOptions;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private StatusEnum status;
-    private Long roundNumber;
 
+    @JsonProperty(value = "round_number", access = JsonProperty.Access.READ_ONLY)
+    private int roundNumber;
 
-    public Game addPlayersItem(Player playersItem) {
-        if (this.players == null) {
-            this.players = new ArrayList<>();
-        }
-
-        this.players.add(playersItem);
-        return this;
-    }
-
-    public Game removePlayersItem(Player playersItem) {
-        if (playersItem != null && this.players != null) {
-            this.players.remove(playersItem);
-        }
-        return this;
-    }
+    //TODO: add saved Ticks as Options?
+    // Only as subresureces
 }
 
 

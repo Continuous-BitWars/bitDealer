@@ -4,11 +4,9 @@ import de.bitwars.api.interfaces.LeagueApi;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
-import de.bitwars.models.gameMap.mapper.GameMapMapper;
 import de.bitwars.models.league.LeagueController;
 import de.bitwars.models.league.dao.LeagueDAO;
 import de.bitwars.models.league.mapper.LeagueMapper;
-import de.bitwars.models.player.mapper.PlayerMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +20,6 @@ public class LeagueResource implements LeagueApi {
 
 
     private final LeagueMapper leagueMapper;
-    private final PlayerMapper playerMapper;
-    private final GameMapMapper gameMapMapper;
-
     private final LeagueController leagueController;
 
 
@@ -77,7 +72,7 @@ public class LeagueResource implements LeagueApi {
 
     @Override
     public League addPlayer(long leagueId, Player player) {
-        LeagueDAO leagueDAO = leagueController.addPlayer(leagueId, playerMapper.toPlayerDAO(player));
+        LeagueDAO leagueDAO = leagueController.addPlayer(leagueId, player.getId());
         return leagueMapper.toLeague(leagueDAO);
     }
 
@@ -89,7 +84,7 @@ public class LeagueResource implements LeagueApi {
 
     @Override
     public League addGameMap(long leagueId, GameMap gameMap) {
-        LeagueDAO leagueDAO = leagueController.addGameMap(leagueId, gameMapMapper.toGameMapDAO(gameMap));
+        LeagueDAO leagueDAO = leagueController.addGameMap(leagueId, gameMap.getId());
         return leagueMapper.toLeague(leagueDAO);
     }
 

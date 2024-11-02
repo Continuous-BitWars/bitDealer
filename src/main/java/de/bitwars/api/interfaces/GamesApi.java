@@ -47,7 +47,7 @@ public interface GamesApi {
      */
     @POST
     @Path("/{gameId}/players")
-    Game addPlayerToGame(@PathParam(PARAM_GAME_ID) Integer gameId, Player player);
+    Game addPlayerToGame(@PathParam(PARAM_GAME_ID) long gameId, Player player);
 
 
     /**
@@ -104,9 +104,7 @@ public interface GamesApi {
 
     /**
      * @param gameId
-     * @param gameOptions
      * @return Start Game
-     * @return Can`t Start Game
      */
     @POST
     @Path("/{gameId}/running")
@@ -116,7 +114,6 @@ public interface GamesApi {
     /**
      * @param gameId
      * @return Stop Game
-     * @return Can`t Stop Game
      */
     @DELETE
     @Path("/{gameId}/running")

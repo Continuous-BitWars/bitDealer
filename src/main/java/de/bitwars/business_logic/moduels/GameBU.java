@@ -1,15 +1,24 @@
-package de.bitwars.models.game.moduels;
+package de.bitwars.business_logic.moduels;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.bitwars.api.models.StatusEnum;
+import de.bitwars.api.models.clients.Board;
+import de.bitwars.business_logic.mapper.GameBUMapper;
 import de.bitwars.live.GameLiveController;
+import de.bitwars.models.game.dao.GameDAO;
+import de.bitwars.models.gameTick.GameTickController;
+import de.bitwars.models.gameTick.dao.GameTickDAO;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,21 +28,30 @@ import java.util.stream.Stream;
 @NoArgsConstructor
 @Getter
 @Setter
+@ApplicationScoped
 public class GameBU implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(GameBU.class);
+
     private long id;
     private String name;
-    private Long tick;
-    private Duration tickSpeed;
-    private int remainingPlayers;
-    private GameStatus gameStatus;
-
-    private List<ActionProvider> players;
-    private GameFieldBU gameField;
     private GameMapBU gameMap;
     private GameConfigBU gameConfig;
-
     private GameLiveController gameLiveController;
+    private GameDAO gameDAO;
+
+    private GameStatus gameStatus;
+
+    private int tick;
+    private int remainingPlayers;
+    private List<ActionProvider> players;
+    private GameFieldBU gameField;
+
+    @Inject
+    GameTickController gameTickController;
+    @Inject
+    GameBUMapper gameBUMapper;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public GameBU(long gameId, String name, GameConfigBU gameConfig, GameMapBU gameMap, GameLiveController gameLiveController) {
         this.id = gameId;
@@ -43,14 +61,42 @@ public class GameBU implements Runnable {
         this.gameField = new GameFieldBU(gameMap);
         this.gameStatus = GameStatus.STOPPED;
         this.players = new ArrayList<>();
-        this.tickSpeed = Duration.ofSeconds(1);
-        this.tick = 0L;
+        this.tick = 0;
         this.remainingPlayers = 0;
         this.gameLiveController = gameLiveController;
     }
 
-    public GameBU(long gameId) {
-        this(gameId, "", null, null, null);
+    public GameBU(GameDAO gameDAO) {
+        this.id = gameDAO.getId();
+        this.name = gameDAO.getName();
+        this.gameStatus = GameStatus.STOPPED;
+        this.gameDAO = gameDAO;
+
+        this.gameMap = null;
+        this.gameConfig = null;
+        this.gameLiveController = null;
+        this.tick = 0;
+        this.remainingPlayers = 0;
+        this.players = new ArrayList<>();
+        this.gameField = null;
+    }
+
+    @Transactional
+    public void setStatusRunning() {
+        this.setGameStatus(GameStatus.RUNNING);
+        this.getGameDAO().setStatus(StatusEnum.RUNNING);
+    }
+
+    @Transactional
+    public void setStatusStopped() {
+        this.setGameStatus(GameStatus.STOPPED);
+        this.getGameDAO().setStatus(StatusEnum.STOPPED);
+    }
+
+    @Transactional
+    public void setStatusDone() {
+        this.setGameStatus(GameStatus.DONE);
+        this.getGameDAO().setStatus(StatusEnum.DONE);
     }
 
     public void addPlayer(ActionProvider player) {
@@ -65,17 +111,29 @@ public class GameBU implements Runnable {
         }
         players.add(player);
 
-        this.gameMap.getBases().stream()
-                .filter(base -> base.getPlayerId() == players.size())
-                .map(BaseBU::getUid)
-                .forEach(baseId -> this.gameField.getBases().get(baseId).setPlayerId(player.getId()));
-
         this.remainingPlayers++;
+    }
+
+
+    public void setupGameField() {
+
+        this.gameField = new GameFieldBU(this.gameMap);
+
+        for (int i = 0; i < players.size(); i++) {
+            int finalI = i;
+            this.gameMap.getBases().stream()
+                    .filter(base -> base.getPlayerId() == (finalI + 1))
+                    .map(BaseBU::getUid)
+                    .forEach(baseId -> this.gameField.getBases().get(baseId).setPlayerId(players.get(finalI).getId()));
+        }
+
+
     }
 
     @Override
     public void run() {
-        log.info("Run GameStep for: {} -> {}", this.getId(), this.getName());
+        log.info("[{}] Tick {} is Start!", this.getId(), this.tick);
+
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
             log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
             this.sendGameStateToWebsocket();
@@ -102,14 +160,31 @@ public class GameBU implements Runnable {
         log.debug("-----");
 
 
-        //TODO: Store Step
+        storeGameState();
         sendGameStateToWebsocket();
 
 
         cleanup();
         checkIsDone();
 
+        log.info("[{}] Tick {} is Done!", this.getId(), this.tick);
         this.tick++;
+
+    }
+
+    private void storeGameState() {
+        log.debug("[{}] storeGameState", this.getId());
+        Board board = this.gameBUMapper.toBoard(this, 0);
+        String message = null;
+        try {
+            message = objectMapper.writeValueAsString(board);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        GameTickDAO gameTickDAO = this.gameTickController.storeTick(tick, message, gameDAO);
+        log.debug("[{}] gameTickDAO from Tick {} has id: {}", this.getId(), gameTickDAO.getTick(), gameTickDAO.getId());
+
     }
 
     private void sendGameStateToWebsocket() {
@@ -192,11 +267,6 @@ public class GameBU implements Runnable {
                 playerAction.getAmount() > 0;
     }
 
-    public void removePlayer(long playerId) {
-        throw new NotImplementedException();
-        //TODO: Implemented
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -208,5 +278,9 @@ public class GameBU implements Runnable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void loadGame(GameTickDAO gameTickDAO) {
+        //TODO
     }
 }

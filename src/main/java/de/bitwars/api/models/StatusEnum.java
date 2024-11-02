@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 
 public enum StatusEnum {
+    PENDING("pending"),
     RUNNING("running"),
     STOPPED("stopped"),
     DONE("done");

@@ -17,6 +17,7 @@
 package de.bitwars.api.interfaces;
 
 import de.bitwars.api.models.GameMap;
+import de.bitwars.api.models.GameMapJson;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -63,6 +64,27 @@ public interface GameMapApi {
     @GET
     @Path("/{mapId}")
     GameMap getGameMapById(@PathParam("mapId") long mapId);
+
+    /**
+     * Retrieves a GameMap Json Value by its ID.
+     *
+     * @param mapId The ID of the GameMap
+     * @return The GameMapJson with for specified ID
+     */
+    @GET
+    @Path("/{mapId}/json")
+    GameMapJson getGameMapJsonById(@PathParam("mapId") long mapId);
+
+    /**
+     * Updates an existing GameMapJson by its GameMap ID.
+     *
+     * @param mapId       The ID of the GameMap to update
+     * @param gameMapJson The GameMapJson data to update JSON Value
+     * @return The updated GameMapJson
+     */
+    @PUT
+    @Path("/{mapId}/json")
+    GameMapJson updateGameMapJsonById(@PathParam("mapId") long mapId, GameMapJson gameMapJson);
 
     /**
      * Lists all available GameMaps.

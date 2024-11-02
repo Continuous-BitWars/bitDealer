@@ -17,7 +17,6 @@
 package de.bitwars.models.gameMap;
 
 import de.bitwars.business_logic.GameMapLoader;
-import de.bitwars.business_logic.MapController;
 import de.bitwars.business_logic.moduels.GameMapBU;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.gameMap.repository.GameMapRepository;
@@ -33,7 +32,7 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class GameMapController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MapController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameMapController.class);
 
     @Inject
     GameMapRepository gameMapRepository;
@@ -43,9 +42,11 @@ public class GameMapController {
         if (gameMapDAO.getJsonString().isEmpty() && !gameMapDAO.getProviderUrl().isEmpty()) {
             gameMapDAO.setJsonString(GameMapLoader.fetchJsonFromUrl(gameMapDAO.getProviderUrl()));
             GameMapBU gameMapBU = GameMapLoader.mapJsonToGameMapBU(gameMapDAO.getJsonString());
-
-            gameMapDAO.setName(gameMapBU.getName());
             gameMapDAO.setMaxPlayerCount(gameMapBU.getMaxPlayerCount());
+
+            if (gameMapDAO.getName().isEmpty()) {
+                gameMapDAO.setName(gameMapBU.getName());
+            }
         }
         gameMapRepository.persist(gameMapDAO);
         return gameMapDAO;
@@ -77,5 +78,17 @@ public class GameMapController {
             return gameMap;
         }
         throw new NotFoundException(String.format("GameMap with id %s not found", newGameMapDAO.getId()));
+    }
+
+    @Transactional
+    public GameMapDAO updateGameMapJsonById(long mapId, String value) {
+        Optional<GameMapDAO> gameMapDAO = gameMapRepository.findByIdOptional(mapId);
+        if (gameMapDAO.isPresent()) {
+            GameMapDAO gameMap = gameMapDAO.get();
+            gameMap.setJsonString(value);
+            return gameMap;
+        }
+        throw new NotFoundException(String.format("GameMap with id %s not found", mapId));
+
     }
 }

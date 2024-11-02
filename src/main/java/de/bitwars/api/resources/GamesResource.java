@@ -20,51 +20,36 @@ import de.bitwars.api.interfaces.GamesApi;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
-import de.bitwars.models.game.Config;
 import de.bitwars.models.game.GameController;
-import de.bitwars.models.game.MapController;
-import de.bitwars.models.game.mapper.GameBUMapper;
-import de.bitwars.models.game.moduels.ActionProvider;
-import de.bitwars.models.game.moduels.GameBU;
-import de.bitwars.models.game.moduels.player.DummyPlayer;
-import de.bitwars.models.game.moduels.player.RemotePlayer;
+import de.bitwars.models.game.dao.GameDAO;
+import de.bitwars.models.game.mapper.GameMapper;
+import de.bitwars.models.player.PlayerController;
+import de.bitwars.models.player.dao.PlayerDAO;
+import de.bitwars.models.player.mapper.PlayerMapper;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 public class GamesResource implements GamesApi {
 
     private final GameController gameController;
-    private final GameBUMapper gameBUMapper;
-    private final PlayersResource playersResource;
-    private final MapController mapController;
-
-    @Override
-    public Game addPlayerToGame(Integer gameId, Player player) {
-        if (player.getId() < 100) {
-            player = playersResource.getPlayerById(player.getId());
-        }
-
-        ActionProvider actionProvider;
-        if (player.getProviderUrl().startsWith("http")) {
-            actionProvider = new RemotePlayer(player.getId(), player.getName(), player.getProviderUrl(), player.getColor(), gameBUMapper);
-        } else {
-            actionProvider = new DummyPlayer(player.getId(), player.getColor());
-        }
-
-        GameBU gameBU = this.gameController.addPlayerToGame(gameId, actionProvider);
-        return this.gameBUMapper.toGame(gameBU);
-    }
+    private final GameMapper gameMapper;
+    private final PlayerController playerController;
+    private final PlayerMapper playerMapper;
 
     @Override
     public Game createGame(Game game) {
-        String mapUrl = game.getMapURL();
-        GameBU gameBU = this.gameController.createGame(game.getName(), Config.defaultOptions, mapController.loadFromUrl(mapUrl));
-        return this.gameBUMapper.toGame(gameBU);
+        if (game.getGameMap().getId() <= 0) {
+            throw new IllegalArgumentException("Game map id must be set");
+        }
+        GameDAO gameDAO = this.gameController.createGame(game.getName(), game.getGameMap().getId());
+        return this.gameMapper.toGame(gameDAO);
     }
 
     @Override
@@ -74,14 +59,17 @@ public class GamesResource implements GamesApi {
 
     @Override
     public Game getGameById(long gameId) {
-        GameBU gameBU = this.gameController.getGameById(gameId);
-        return this.gameBUMapper.toGame(gameBU);
+        Optional<GameDAO> gameDAO = this.gameController.getGameById(gameId);
+        if (gameDAO.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return this.gameMapper.toGame(gameDAO.get());
     }
 
     @Override
     public List<Game> listGames() {
-        List<GameBU> gameBUs = this.gameController.getGames();
-        return gameBUs.stream().map(this.gameBUMapper::toGame).toList();
+        List<GameDAO> gameDAOs = this.gameController.listGames();
+        return gameDAOs.stream().map(this.gameMapper::toGame).toList();
     }
 
     @Override
@@ -91,25 +79,45 @@ public class GamesResource implements GamesApi {
     }
 
     @Override
+    public Game addPlayerToGame(long gameId, Player player) {
+        Optional<PlayerDAO> playerDAO = Optional.empty();
+        if (player.getId() > 0) {
+            playerDAO = playerController.getPlayerById(player.getId());
+        } else if (!player.getProviderUrl().isEmpty() && player.getId() == 0) {
+            playerDAO = Optional.of(playerController.createPlayer(playerMapper.toPlayerDAO(player)));
+        }
+
+        if (playerDAO.isEmpty()) {
+            throw new NotImplementedException("Use Player update function before add player id with other ProviderUrl!");
+        }
+
+        GameDAO gameDAO = this.gameController.addPlayerToGame(gameId, playerDAO.get());
+        return this.gameMapper.toGame(gameDAO);
+    }
+
+    @Override
     public Game removePlayerFromGame(long gameId, long playerId) {
-        GameBU gameBU = this.gameController.removePlayerFromGame(gameId, playerId);
-        return this.gameBUMapper.toGame(gameBU);
+        GameDAO gameDAO = this.gameController.removePlayerFromGame(gameId, playerId);
+        return this.gameMapper.toGame(gameDAO);
     }
 
     @Override
     public Game startGame(long gameId, GameOptions gameOptions) {
-        GameBU gameBU = this.gameController.startGame(gameId, gameOptions.getTimeBetweenTicks());
-        return this.gameBUMapper.toGame(gameBU);
+        GameDAO gameDAO = this.gameController.startGame(gameId, gameOptions.getTimeBetweenTicks());
+        return this.gameMapper.toGame(gameDAO);
     }
 
     @Override
     public Game stopGame(long gameId) {
-        GameBU gameBU = this.gameController.stopGame(gameId);
-        return this.gameBUMapper.toGame(gameBU);
+        GameDAO gameDAO = this.gameController.stopGame(gameId);
+        return this.gameMapper.toGame(gameDAO);
     }
 
     @Override
     public Game updateGame(long gameId, Game game) {
-        throw new NotImplementedException();
+        game.setId(gameId);
+        GameDAO gameDAO = gameMapper.toGameDAO(game);
+        gameDAO = gameController.updateGame(gameDAO);
+        return this.gameMapper.toGame(gameDAO);
     }
 }

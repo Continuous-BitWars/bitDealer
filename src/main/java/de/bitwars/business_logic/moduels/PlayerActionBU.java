@@ -1,4 +1,4 @@
-package de.bitwars.models.game.moduels;
+package de.bitwars.business_logic.moduels;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GameConfigPathsBU {
-    private int gracePeriod;
-    private int deathRate;
+public class PlayerActionBU {
+    private int source;
+    private int destination;
+    private int amount;
 }

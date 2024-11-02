@@ -1,11 +1,11 @@
-package de.bitwars.models.game;
+package de.bitwars.business_logic;
 
-import de.bitwars.models.game.moduels.BaseBU;
-import de.bitwars.models.game.moduels.BasePositionBU;
-import de.bitwars.models.game.moduels.GameConfigBU;
-import de.bitwars.models.game.moduels.GameConfigBaseLevelsBU;
-import de.bitwars.models.game.moduels.GameConfigPathsBU;
-import de.bitwars.models.game.moduels.GameMapBU;
+import de.bitwars.business_logic.moduels.BaseBU;
+import de.bitwars.business_logic.moduels.BasePositionBU;
+import de.bitwars.business_logic.moduels.GameConfigBU;
+import de.bitwars.business_logic.moduels.GameConfigBaseLevelsBU;
+import de.bitwars.business_logic.moduels.GameConfigPathsBU;
+import de.bitwars.business_logic.moduels.GameMapBU;
 
 import java.util.List;
 

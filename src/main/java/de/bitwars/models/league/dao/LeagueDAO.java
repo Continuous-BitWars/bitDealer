@@ -22,6 +22,7 @@ import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -49,7 +50,7 @@ public class LeagueDAO {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "league_player",
             joinColumns = @JoinColumn(name = "league_id"),
@@ -58,7 +59,7 @@ public class LeagueDAO {
     private List<PlayerDAO> players;
 
     // Many-to-Many relationship with GameMapDAO using List
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "league_game_map",
             joinColumns = @JoinColumn(name = "league_id"),

@@ -24,19 +24,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@JsonTypeName("Map")
+@JsonTypeName("MapJson")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameMap {
+public class GameMapJson {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
-    private String name;
-    
-    @JsonProperty("max_player_count")
-    private int maxPlayerCount;
-
-    @JsonProperty("provider_url")
-    private String providerUrl;
+    private String value;
 }
 

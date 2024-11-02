@@ -1,14 +1,14 @@
 package de.bitwars.games;
 
-import de.bitwars.models.game.moduels.ActionProvider;
-import de.bitwars.models.game.moduels.BaseBU;
-import de.bitwars.models.game.moduels.BasePositionBU;
-import de.bitwars.models.game.moduels.GameBU;
-import de.bitwars.models.game.moduels.GameConfigBU;
-import de.bitwars.models.game.moduels.GameConfigBaseLevelsBU;
-import de.bitwars.models.game.moduels.GameConfigPathsBU;
-import de.bitwars.models.game.moduels.GameMapBU;
-import de.bitwars.models.game.moduels.player.DummyPlayer;
+import de.bitwars.business_logic.moduels.ActionProvider;
+import de.bitwars.business_logic.moduels.BaseBU;
+import de.bitwars.business_logic.moduels.BasePositionBU;
+import de.bitwars.business_logic.moduels.GameBU;
+import de.bitwars.business_logic.moduels.GameConfigBU;
+import de.bitwars.business_logic.moduels.GameConfigBaseLevelsBU;
+import de.bitwars.business_logic.moduels.GameConfigPathsBU;
+import de.bitwars.business_logic.moduels.GameMapBU;
+import de.bitwars.business_logic.moduels.player.DummyPlayer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -34,21 +34,25 @@ public class GameMapMapper {
         if (gameMap.getId() != null) {
             Optional<GameMapDAO> gameMapDAO = gameMapRepository.findByIdOptional(gameMap.getId());
             if (gameMapDAO.isPresent()) {
-                final GameMapDAO myGameDAO = gameMapDAO.get();
-                myGameDAO.setName(gameMap.getName());
-                myGameDAO.setJsonString(gameMap.getJsonString());
-                myGameDAO.setMaxPlayerCount(gameMap.getMaxPlayerCount());
-                myGameDAO.setProviderUrl(gameMap.getProviderUrl());
-                return myGameDAO;
+                final GameMapDAO myGameMapDAO = gameMapDAO.get();
+                Optional.ofNullable(gameMap.getName()).ifPresent(myGameMapDAO::setName);
+                Optional.of(gameMap.getMaxPlayerCount()).ifPresent(newMaxPlayerCount -> {
+                    if (newMaxPlayerCount > 0) {
+                        myGameMapDAO.setMaxPlayerCount(newMaxPlayerCount);
+                    }
+                });
+                Optional.ofNullable(gameMap.getProviderUrl()).ifPresent(myGameMapDAO::setProviderUrl);
+
+                return myGameMapDAO;
             }
         }
-        return new GameMapDAO(null, gameMap.getName(), gameMap.getJsonString(), gameMap.getMaxPlayerCount(), gameMap.getProviderUrl());
+        return new GameMapDAO(null, gameMap.getName(), null, gameMap.getMaxPlayerCount(), gameMap.getProviderUrl());
     }
 
     public GameMap toGameMap(GameMapDAO gameMapDAO) {
         if (gameMapDAO == null) {
             return null;
         }
-        return new GameMap(gameMapDAO.getId(), gameMapDAO.getName(), gameMapDAO.getJsonString(), gameMapDAO.getMaxPlayerCount(), gameMapDAO.getProviderUrl());
+        return new GameMap(gameMapDAO.getId(), gameMapDAO.getName(), gameMapDAO.getMaxPlayerCount(), gameMapDAO.getProviderUrl());
     }
 }

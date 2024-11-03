@@ -14,6 +14,7 @@ import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,7 @@ public class GameLogic {
     @Inject
     GameRepository gameRepository;
 
+
     @PostConstruct
     public void init() {
         LOGGER.info("Initializing GameLogic and starting all running games...");
@@ -54,11 +56,13 @@ public class GameLogic {
         LOGGER.info("Initialized {} running games.", runningGames.size());
     }
 
+    @Transactional
     @Scheduled(delayed = "30s", every = "30s")
     void cleanupFinishedGames() {
         LOGGER.debug("Scheduled to cleanup finished Games");
         List<Long> ids = this.runningGames.keySet().stream()
                 .filter(gameBU -> gameBU.getGameStatus().equals(GameStatus.DONE))
+                .peek(GameBU::setStatusDone)
                 .map(GameBU::getId).toList();
         ids.forEach(this::stopGame);
     }
@@ -110,7 +114,7 @@ public class GameLogic {
         if (gameBU.isPresent()) {
             GameBU game = gameBU.get();
             this.runningGames.get(game).cancel(true);
-            this.runningGames.put(game, null);
+            this.runningGames.remove(game);
             if (game.getGameStatus() != GameStatus.DONE) {
                 game.setStatusStopped();
             }

@@ -11,6 +11,7 @@ import de.bitwars.models.gameTick.GameTickController;
 import de.bitwars.models.gameTick.dao.GameTickDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,6 +51,8 @@ public class GameBU implements Runnable {
     GameTickController gameTickController;
     @Inject
     GameBUMapper gameBUMapper;
+    @Inject
+    EntityManager entityManager;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -97,6 +100,7 @@ public class GameBU implements Runnable {
     public void setStatusDone() {
         this.setGameStatus(GameStatus.DONE);
         this.getGameDAO().setStatus(StatusEnum.DONE);
+        this.entityManager.merge(this.getGameDAO());
     }
 
     public void addPlayer(ActionProvider player) {
@@ -206,7 +210,8 @@ public class GameBU implements Runnable {
 
         log.debug("checkIsDone: remainingPlayers={}", this.remainingPlayers);
         if (this.remainingPlayers <= 1) {
-            this.gameStatus = GameStatus.DONE;
+            log.info("[{}] Game ist done, only one player remaining", this.getId());
+            this.setStatusDone();
         }
     }
 

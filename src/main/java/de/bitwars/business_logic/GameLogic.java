@@ -1,5 +1,6 @@
 package de.bitwars.business_logic;
 
+import de.bitwars.api.models.StatusEnum;
 import de.bitwars.business_logic.factory.GameBUFactory;
 import de.bitwars.business_logic.moduels.ActionProvider;
 import de.bitwars.business_logic.moduels.GameBU;
@@ -8,7 +9,9 @@ import de.bitwars.business_logic.moduels.player.DummyPlayer;
 import de.bitwars.business_logic.moduels.player.RemotePlayer;
 import de.bitwars.models.game.GameController;
 import de.bitwars.models.game.dao.GameDAO;
+import de.bitwars.models.game.repository.GameRepository;
 import io.quarkus.scheduler.Scheduled;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -38,6 +41,19 @@ public class GameLogic {
     @Inject
     GameBUFactory gameBUFactory;
 
+    @Inject
+    GameRepository gameRepository;
+
+    @PostConstruct
+    public void init() {
+        LOGGER.info("Initializing GameLogic and starting all running games...");
+
+        List<GameDAO> runningGames = gameRepository.findByStatus(StatusEnum.RUNNING);
+        runningGames.forEach(this::startGame);
+
+        LOGGER.info("Initialized {} running games.", runningGames.size());
+    }
+
     @Scheduled(delayed = "30s", every = "30s")
     void cleanupFinishedGames() {
         LOGGER.debug("Scheduled to cleanup finished Games");
@@ -55,7 +71,7 @@ public class GameLogic {
         GameBU gameBU = gameBUFactory.createGameBU(gameDAO);
         gameBU.setGameConfig(Config.defaultOptions);//TODO add GameCodnif To Game
         gameBU.setGameMap(Config.defaultMap);
-        
+
         gameDAO.getPlayers().forEach(playerDAO -> {
             LOGGER.info("Add Player to Game: {} -> {}", gameBU.getId(), gameBU.getName());
 

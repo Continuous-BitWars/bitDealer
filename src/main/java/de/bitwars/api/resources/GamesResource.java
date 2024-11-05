@@ -20,6 +20,7 @@ import de.bitwars.api.interfaces.GamesApi;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
+import de.bitwars.api.models.StatusEnum;
 import de.bitwars.api.models.clients.Board;
 import de.bitwars.models.game.GameController;
 import de.bitwars.models.game.dao.GameDAO;
@@ -71,8 +72,13 @@ public class GamesResource implements GamesApi {
     }
 
     @Override
-    public List<Game> listGames() {
+    public List<Game> listGames(StatusEnum statusFilter) {
         List<GameDAO> gameDAOs = this.gameController.listGames();
+        if (statusFilter != null) {
+            gameDAOs = gameDAOs.stream()
+                    .filter(game -> game.getStatus().equals(statusFilter))
+                    .toList();
+        }
         return gameDAOs.stream().map(this.gameMapper::toGame).toList();
     }
 

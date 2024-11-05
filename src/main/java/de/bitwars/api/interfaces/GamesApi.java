@@ -19,6 +19,7 @@ package de.bitwars.api.interfaces;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
+import de.bitwars.api.models.StatusEnum;
 import de.bitwars.api.models.clients.Board;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -28,6 +29,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 
 import java.util.List;
 
@@ -81,7 +83,7 @@ public interface GamesApi {
      * @return A list of games
      */
     @GET
-    List<Game> listGames();
+    List<Game> listGames(@QueryParam("filter") StatusEnum statusFilter);
 
 
     /**

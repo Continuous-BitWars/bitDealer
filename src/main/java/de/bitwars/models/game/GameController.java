@@ -6,6 +6,7 @@ import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.game.repository.GameRepository;
 import de.bitwars.models.gameMap.GameMapController;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
+import de.bitwars.models.gameTick.dao.GameTickDAO;
 import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -178,5 +179,10 @@ public class GameController {
         throw new NotFoundException("Game not found.");
     }
 
-
+    public List<GameTickDAO> getBoardTicksByGameId(long gameId) {
+        Optional<GameDAO> gameDAO = this.getGameById(gameId);
+        return gameDAO
+                .orElseThrow(() -> new NotFoundException(String.format("Game with id %d not found.", gameId)))
+                .getGameTicks();
+    }
 }

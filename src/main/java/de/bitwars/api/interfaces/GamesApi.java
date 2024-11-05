@@ -19,6 +19,7 @@ package de.bitwars.api.interfaces;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
+import de.bitwars.api.models.clients.Board;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -128,5 +129,14 @@ public interface GamesApi {
     @PUT
     @Path("/{gameId}")
     Game updateGame(@PathParam(PARAM_GAME_ID) long gameId, Game game);
+
+    /**
+     * @param gameId
+     * @return List of GameTicks
+     */
+    @GET
+    @Path("/{gameId}/ticks")
+    List<Board> getBoardTicksByGameId(@PathParam(PARAM_GAME_ID) long gameId);
+
 
 }

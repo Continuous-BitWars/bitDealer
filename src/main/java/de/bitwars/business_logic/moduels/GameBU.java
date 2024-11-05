@@ -9,6 +9,7 @@ import de.bitwars.live.GameLiveController;
 import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.gameTick.GameTickController;
 import de.bitwars.models.gameTick.dao.GameTickDAO;
+import de.bitwars.models.gameTick.mapper.GameTickMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -53,6 +54,8 @@ public class GameBU implements Runnable {
     GameBUMapper gameBUMapper;
     @Inject
     EntityManager entityManager;
+    @Inject
+    GameTickMapper gameTickMapper;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -288,24 +291,20 @@ public class GameBU implements Runnable {
 
     public void loadGame(GameTickDAO gameTickDAO) {
         log.info("[{}] load GameBU from GameTickDAO with Tick {}", this.getId(), gameTickDAO.getTick());
-        try {
-            Board board = objectMapper.readValue(gameTickDAO.getGameStateJson(), Board.class);
-            GameBU newGame = gameBUMapper.toGameBU(board);
 
-            this.gameField = newGame.gameField;
-            this.gameConfig = newGame.gameConfig;
-            this.id = newGame.id;
-            this.tick = newGame.tick + 1;
-            this.remainingPlayers = newGame.remainingPlayers;
+        Board board = gameTickMapper.toBoard(gameTickDAO);
+        GameBU newGame = gameBUMapper.toGameBU(board);
 
-            if (this.players.size() != board.getGame().getPlayerCount()) {
-                log.error("[{}] Can't load game, Player Count is not egle! {} != {}", this.getId(), this.players.size(), board.getGame().getPlayerCount());
-                throw new IllegalStateException("Can't load game, Player Count is not egle!");
-            }
+        this.gameField = newGame.gameField;
+        this.gameConfig = newGame.gameConfig;
+        this.id = newGame.id;
+        this.tick = newGame.tick + 1;
+        this.remainingPlayers = newGame.remainingPlayers;
 
-
-        } catch (JsonProcessingException e) {
-            log.error("[{}]Cant load GameTick: {}", this.getId(), e.getMessage(), e);
+        if (this.players.size() != board.getGame().getPlayerCount()) {
+            log.error("[{}] Can't load game, Player Count is not egle! {} != {}", this.getId(), this.players.size(), board.getGame().getPlayerCount());
+            throw new IllegalStateException("Can't load game, Player Count is not egle!");
         }
+
     }
 }

@@ -46,7 +46,7 @@ public class GameMapMapper {
                 return myGameMapDAO;
             }
         }
-        return new GameMapDAO(null, gameMap.getName(), null, gameMap.getMaxPlayerCount(), gameMap.getProviderUrl());
+        return new GameMapDAO(null, gameMap.getName(), "", gameMap.getMaxPlayerCount(), gameMap.getProviderUrl());
     }
 
     public GameMap toGameMap(GameMapDAO gameMapDAO) {

@@ -60,6 +60,10 @@ public class GameDAO {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
     private List<GameTickDAO> gameTicks;
 
+    //TODO: add to mapper and co
+    //@ManyToOne(fetch = FetchType.EAGER)
+    //private LeagueDAO leagueDAO = null;
+
     public GameDAO(String name, GameMapDAO gameMapDAO) {
         this.name = name;
         this.map = gameMapDAO;

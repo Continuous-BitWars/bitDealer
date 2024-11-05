@@ -17,23 +17,20 @@
 package de.bitwars.models.league.dao;
 
 import de.bitwars.api.models.StatusEnum;
+import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.player.dao.PlayerDAO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity(name = "league")
 @AllArgsConstructor
@@ -66,4 +63,46 @@ public class LeagueDAO {
             inverseJoinColumns = @JoinColumn(name = "game_map_id")
     )
     private List<GameMapDAO> gameMaps;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<GameDAO> games;
+
+    public List<GameDAO> getRunningGames() {
+        return this.games.stream().filter(gameDAO -> gameDAO.getStatus() != StatusEnum.DONE).toList();
+    }
+
+    public GameMapDAO getLeastUsedGameMap() {
+        if (gameMaps == null || gameMaps.isEmpty()) {
+            return null;
+        }
+
+        Map<GameMapDAO, Long> mapUsageCount = gameMaps.stream()
+                .collect(Collectors.toMap(
+                        gameMap -> gameMap,
+                        gameMap -> games.stream().filter(game -> game.getMap().equals(gameMap)).count()
+                ));
+
+        return mapUsageCount.entrySet().stream()
+                .min(Comparator.comparingLong(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .orElse(null);
+    }
+
+    public List<PlayerDAO> getPlayersSortedByUsageInGames() {
+        if (players == null || players.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Map<PlayerDAO, Long> playerUsageCount = players.stream()
+                .collect(Collectors.toMap(
+                        player -> player,
+                        player -> games.stream().filter(game -> game.getPlayers().contains(player)).count()
+                ));
+
+        return playerUsageCount.entrySet().stream()
+                .sorted(Comparator.comparingLong(Map.Entry::getValue))
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
 }

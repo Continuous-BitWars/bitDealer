@@ -20,9 +20,12 @@ import de.bitwars.api.interfaces.GamesApi;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameOptions;
 import de.bitwars.api.models.Player;
+import de.bitwars.api.models.clients.Board;
 import de.bitwars.models.game.GameController;
 import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.game.mapper.GameMapper;
+import de.bitwars.models.gameTick.dao.GameTickDAO;
+import de.bitwars.models.gameTick.mapper.GameTickMapper;
 import de.bitwars.models.player.PlayerController;
 import de.bitwars.models.player.dao.PlayerDAO;
 import de.bitwars.models.player.mapper.PlayerMapper;
@@ -42,6 +45,7 @@ public class GamesResource implements GamesApi {
     private final GameMapper gameMapper;
     private final PlayerController playerController;
     private final PlayerMapper playerMapper;
+    private final GameTickMapper gameTickMapper;
 
     @Override
     public Game createGame(Game game) {
@@ -119,5 +123,11 @@ public class GamesResource implements GamesApi {
         GameDAO gameDAO = gameMapper.toGameDAO(game);
         gameDAO = gameController.updateGame(gameDAO);
         return this.gameMapper.toGame(gameDAO);
+    }
+
+    @Override
+    public List<Board> getBoardTicksByGameId(long gameId) {
+        List<GameTickDAO> gameTickDAOs = gameController.getBoardTicksByGameId(gameId);
+        return gameTickDAOs.stream().map(gameTickMapper::toBoard).toList();
     }
 }

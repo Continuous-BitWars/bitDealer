@@ -16,10 +16,16 @@
  */
 package de.bitwars.models.league.repository;
 
+import de.bitwars.api.models.StatusEnum;
 import de.bitwars.models.league.dao.LeagueDAO;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.List;
+
 @ApplicationScoped
 public class LeagueRepository implements PanacheRepository<LeagueDAO> {
+    public List<LeagueDAO> findByStatus(StatusEnum status) {
+        return list("status", status);
+    }
 }

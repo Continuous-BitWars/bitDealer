@@ -80,7 +80,7 @@ public class GameLogic {
         gameBU.setGameMap(gameMapBUMapper.toGameBU(gameDAO.getMap()));
 
         gameDAO.getPlayers().forEach(playerDAO -> {
-            LOGGER.info("Add Player to Game: {} -> {}", gameBU.getId(), gameBU.getName());
+            LOGGER.info("Add Player {} >{}< to Game: {} -> {}", playerDAO.getId(), playerDAO.getName(), gameBU.getId(), gameBU.getName());
 
             ActionProvider actionProvider;
             //TODO: add provider for websocket

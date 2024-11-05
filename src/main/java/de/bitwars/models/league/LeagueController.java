@@ -26,6 +26,7 @@ import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
@@ -71,11 +72,6 @@ public class LeagueController {
             LeagueDAO myLeagueDAO = leagueDAO.get();
             myLeagueDAO.setName(newLeagueDAO.getName());
             myLeagueDAO.setParallelGames(newLeagueDAO.getParallelGames());
-
-            //myLeagueDAO.setGameMaps(newLeagueDAO.getGameMaps());
-            //myLeagueDAO.setPlayers(newLeagueDAO.getPlayers());
-            //TODO: add game!
-
             return myLeagueDAO;
         }
         throw new NotFoundException(String.format("League with id %s not found", newLeagueDAO.getId()));
@@ -113,7 +109,12 @@ public class LeagueController {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
             PlayerDAO playerDAO = playerDAOOptional.get();
 
+            if (leagueDAO.getPlayers().contains(playerDAO)) {
+                throw new BadRequestException(String.format("Player with id %s already exists", playerId));
+            }
+
             leagueDAO.getPlayers().add(playerDAO);
+
 
             return leagueDAO;
         }
@@ -143,6 +144,9 @@ public class LeagueController {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
             GameMapDAO gameMapDAO = gameMapDAOOptional.get();
 
+            if (leagueDAO.getGameMaps().contains(gameMapDAO)) {
+                throw new BadRequestException(String.format("GameMap with id %s already exists", gameMapDAO));
+            }
             leagueDAO.getGameMaps().add(gameMapDAO);
 
             return leagueDAO;

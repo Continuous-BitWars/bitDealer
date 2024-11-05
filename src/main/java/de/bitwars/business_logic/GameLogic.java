@@ -2,6 +2,7 @@ package de.bitwars.business_logic;
 
 import de.bitwars.api.models.StatusEnum;
 import de.bitwars.business_logic.factory.GameBUFactory;
+import de.bitwars.business_logic.mapper.GameMapBUMapper;
 import de.bitwars.business_logic.moduels.ActionProvider;
 import de.bitwars.business_logic.moduels.GameBU;
 import de.bitwars.business_logic.moduels.GameStatus;
@@ -44,6 +45,8 @@ public class GameLogic {
 
     @Inject
     GameRepository gameRepository;
+    @Inject
+    GameMapBUMapper gameMapBUMapper;
 
 
     @PostConstruct
@@ -74,7 +77,7 @@ public class GameLogic {
     public boolean startGame(GameDAO gameDAO) {
         GameBU gameBU = gameBUFactory.createGameBU(gameDAO);
         gameBU.setGameConfig(Config.defaultOptions);//TODO add GameCodnif To Game
-        gameBU.setGameMap(Config.defaultMap);
+        gameBU.setGameMap(gameMapBUMapper.toGameBU(gameDAO.getMap()));
 
         gameDAO.getPlayers().forEach(playerDAO -> {
             LOGGER.info("Add Player to Game: {} -> {}", gameBU.getId(), gameBU.getName());

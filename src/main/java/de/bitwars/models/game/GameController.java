@@ -73,10 +73,17 @@ public class GameController {
         if (game.isPresent()) {
             GameDAO gameDAO = game.get();
 
+            if (gameDAO.getPlayers().contains(playerDAO)) {
+                throw new IllegalStateException(String.format("Can't add player to game %s: Player already in Game", gameId));
+            }
+            if (gameDAO.getPlayers().size() >= gameDAO.getMap().getMaxPlayerCount()) {
+                throw new IllegalStateException(String.format("Can't add player to game %s: Game is full", gameId));
+            }
+
             if (gameDAO.getStatus().equals(StatusEnum.PENDING)) {
                 gameDAO.getPlayers().add(playerDAO);
             } else {
-                throw new IllegalStateException("Game is running.");
+                throw new IllegalStateException("Game is not in pending state.");
             }
             return gameDAO;
         }

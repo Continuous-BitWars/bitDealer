@@ -10,6 +10,8 @@ import de.bitwars.models.gameTick.dao.GameTickDAO;
 import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import org.slf4j.Logger;
@@ -30,6 +32,8 @@ public class GameController {
     GameLogic gameLogic;
     @Inject
     GameMapController gameMapController;
+    @Inject
+    EntityManager entityManager;
 
 
     @Transactional
@@ -41,6 +45,13 @@ public class GameController {
         }
         GameDAO gameDAO = new GameDAO(name, gameMapDAO.get());
         gameRepository.persist(gameDAO);
+
+        entityManager.flush();
+
+        if (gameDAO.getId() == null) {
+            throw new PersistenceException(String.format("Failed to persist the game with name: %s.", name));
+        }
+
         return gameDAO;
     }
 

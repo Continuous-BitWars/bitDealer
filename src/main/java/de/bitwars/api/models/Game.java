@@ -23,7 +23,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @JsonTypeName("Game")
@@ -50,8 +52,7 @@ public class Game {
     @JsonProperty(value = "round_number", access = JsonProperty.Access.READ_ONLY)
     private int roundNumber;
 
-    //TODO: add saved Ticks as Options?
-    // Only as subresureces
+    private Map<Long, Integer> eliminatedPlayers = new HashMap<>();
 }
 
 

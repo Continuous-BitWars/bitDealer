@@ -28,7 +28,9 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Entity(name = "games")
@@ -60,6 +62,13 @@ public class GameDAO {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
     private List<GameTickDAO> gameTicks;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "player_elimination_ticks", joinColumns = @JoinColumn(name = "game_id"))
+    @MapKeyJoinColumn(name = "player_id")
+    @Column(name = "elimination_tick")
+    private Map<PlayerDAO, Integer> playerEliminationTicks;
+
+
     //TODO: add to mapper and co
     //@ManyToOne(fetch = FetchType.EAGER)
     //private LeagueDAO leagueDAO = null;
@@ -73,6 +82,7 @@ public class GameDAO {
         this.status = StatusEnum.PENDING;
         this.players = new ArrayList<>();
         this.gameTicks = new ArrayList<>();
+        this.playerEliminationTicks = new HashMap<>();
     }
 
 
@@ -90,7 +100,5 @@ public class GameDAO {
         }
         return Optional.empty();
     }
-
-    //TODO: store losing player with gametickID for Scorboard
 }
 

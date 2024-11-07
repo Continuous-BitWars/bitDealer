@@ -45,7 +45,7 @@ public class DummyPlayer implements ActionProvider {
 
     @Override
     public List<PlayerActionBU> requestStep(GameBU gameBU) {
-        if (this.id >= 1001 && this.id <= 2000) {
+        if (this.id >= 0 && this.id <= 2000) {
             Random rand = new Random();
             log.debug("requestStep {} -> 01", this.id);
             List<BaseBU> ownBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id && baseBU.getPopulation() > 2).toList();

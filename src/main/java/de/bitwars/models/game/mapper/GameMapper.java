@@ -10,6 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -40,6 +41,7 @@ public class GameMapper {
                 Optional.ofNullable(game.getPlayers()).ifPresent(players -> {
                     myGameDAO.setPlayers(players.stream().map(playerMapper::toPlayerDAO).toList());
                 });
+                //TODO: add mapping for myGameDAO.setPlayerEliminationTicks();
                 return myGameDAO;
             }
         }
@@ -50,7 +52,8 @@ public class GameMapper {
                 gameMapMapper.toGameMapDAO(game.getGameMap()),
                 game.getStatus(),
                 game.getPlayers().stream().map(playerMapper::toPlayerDAO).toList(),
-                new ArrayList<>()
+                new ArrayList<>(),
+                new HashMap<>()
         );
     }
 
@@ -58,6 +61,9 @@ public class GameMapper {
         if (gameDAO == null) {
             return null;
         }
+        HashMap<Long, Integer> eliminatedPlayers = new HashMap<>();
+        gameDAO.getPlayerEliminationTicks().forEach((playerDAO, integer) -> eliminatedPlayers.put(playerDAO.getId(), integer));
+
         return new Game(
                 gameDAO.getId(),
                 gameDAO.getName(),
@@ -65,6 +71,8 @@ public class GameMapper {
                 gameMapMapper.toGameMap(gameDAO.getMap()),
                 new GameOptions(gameDAO.getTimeBetweenTicks()),
                 gameDAO.getStatus(),
-                gameDAO.getGameTicks().size());
+                gameDAO.getGameTicks().size(),
+                eliminatedPlayers
+        );
     }
 }

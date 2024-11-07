@@ -86,7 +86,7 @@ quarkus:
     level: INFO
     category:
       "de.bitwars":
-        level: DEBUG
+        level: INFO
       "de.bitwars.live":
         level: INFO
       "de.bitwars.api.resources":

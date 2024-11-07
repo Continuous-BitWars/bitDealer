@@ -10,6 +10,7 @@ import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.gameTick.GameTickController;
 import de.bitwars.models.gameTick.dao.GameTickDAO;
 import de.bitwars.models.gameTick.mapper.GameTickMapper;
+import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
@@ -32,7 +34,7 @@ import java.util.stream.Stream;
 @Setter
 @ApplicationScoped
 public class GameBU implements Runnable {
-    private static final Logger log = LoggerFactory.getLogger(GameBU.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameBU.class);
 
     private long id;
     private String name;
@@ -140,32 +142,32 @@ public class GameBU implements Runnable {
 
     @Override
     public void run() {
-        log.info("[{}] Tick {} is Start!", this.getId(), this.tick);
+        LOGGER.info("[{}] Tick {} is Start!", this.getId(), this.tick);
 
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
-            log.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
+            LOGGER.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
             this.sendGameStateToWebsocket();
             return;
         }
-        log.debug("requestPlayerActions: {}", this.getId());
+        LOGGER.debug("requestPlayerActions: {}", this.getId());
         requestPlayerActions();
 
-        log.debug("getBases: {}", this.getId());
+        LOGGER.debug("getBases: {}", this.getId());
         gameField.getBases().values().forEach(base -> base.takeTick(this.gameConfig.getBaseLevelsConfig()));
 
-        log.debug("getBoardActions: {}", this.getId());
+        LOGGER.debug("getBoardActions: {}", this.getId());
         gameField.getBoardActions().forEach(boardActions -> boardActions.takeTick(this.gameConfig.getPathsConfig()));
 
-        log.debug("takeFight: {}", this.getId());
+        LOGGER.debug("takeFight: {}", this.getId());
         takeFight();
 
         this.gameField.getBases().values().forEach(base -> {
-            log.debug("{} - {}: {}", base.getUid(), base.getPlayerId(), base.getPopulation());
+            LOGGER.debug("{} - {}: {}", base.getUid(), base.getPlayerId(), base.getPopulation());
         });
         this.gameField.getBoardActions().forEach(actions -> {
-            log.debug(actions.getPlayer() + ": " + actions.getSource() + " -> " + actions.getDestination() + " | " + actions.getAmount() + " | " + actions.getProgress().getTraveled() + "/" + actions.getProgress().getDistance());
+            LOGGER.debug(actions.getPlayer() + ": " + actions.getSource() + " -> " + actions.getDestination() + " | " + actions.getAmount() + " | " + actions.getProgress().getTraveled() + "/" + actions.getProgress().getDistance());
         });
-        log.debug("-----");
+        LOGGER.debug("-----");
 
 
         storeGameState();
@@ -175,13 +177,13 @@ public class GameBU implements Runnable {
         cleanup();
         checkIsDone();
 
-        log.info("[{}] Tick {} is Done!", this.getId(), this.tick);
+        LOGGER.info("[{}] Tick {} is Done!", this.getId(), this.tick);
         this.tick++;
 
     }
 
     private void storeGameState() {
-        log.debug("[{}] storeGameState", this.getId());
+        LOGGER.debug("[{}] storeGameState", this.getId());
         Board board = this.gameBUMapper.toBoard(this, 0);
         String message = null;
         try {
@@ -191,31 +193,67 @@ public class GameBU implements Runnable {
         }
 
         GameTickDAO gameTickDAO = this.gameTickController.storeTick(tick, message, gameDAO);
-        log.debug("[{}] gameTickDAO from Tick {} has id: {}", this.getId(), gameTickDAO.getTick(), gameTickDAO.getId());
+        LOGGER.debug("[{}] gameTickDAO from Tick {} has id: {}", this.getId(), gameTickDAO.getTick(), gameTickDAO.getId());
 
     }
 
     private void sendGameStateToWebsocket() {
         if (this.gameLiveController != null) {
-            log.debug("broadcastGameStep start");
+            LOGGER.debug("broadcastGameStep start");
             this.gameLiveController.broadcastGameStep(this);
-            log.debug("broadcastGameStep done");
+            LOGGER.debug("broadcastGameStep done");
         } else {
-            log.info("GameLiveController is null. Can't send Websocket Update!");
+            LOGGER.info("GameLiveController is null. Can't send Websocket Update!");
         }
     }
 
     private void checkIsDone() {
+        LOGGER.info("[{}] Check is Player Death!", this.getId());
+
         List<Long> basesIds = this.gameField.getBases().values().stream().map(BaseBU::getPlayerId).filter(playerId -> playerId != 0).distinct().toList();
         List<Long> actionsIds = this.gameField.getBoardActions().stream().map(BoardActionsBU::getPlayer).distinct().toList();
         List<Long> activePlayer = Stream.concat(basesIds.stream(), actionsIds.stream()).distinct().toList();
+
+        LOGGER.info("[{}] Player old {} -> {}!", this.getId(), this.remainingPlayers, activePlayer.size());
+
+        if (this.remainingPlayers != activePlayer.size()) {
+            storeDeathPlayerToDatabase(activePlayer);
+        }
         this.remainingPlayers = activePlayer.size();
 
-        log.debug("checkIsDone: remainingPlayers={}", this.remainingPlayers);
+
+        LOGGER.debug("checkIsDone: remainingPlayers={}", this.remainingPlayers);
         if (this.remainingPlayers <= 1) {
-            log.info("[{}] Game ist done, only one player remaining", this.getId());
+            LOGGER.info("[{}] Game ist done, only one player remaining. Player {} Win!", this.getId(), activePlayer.get(0));
+            Optional<PlayerDAO> playerDAOOptional = this.getGameDAO().getPlayers().stream().filter(playerDAO -> Objects.equals(playerDAO.getId(), activePlayer.get(0))).findFirst();
+            playerDAOOptional.ifPresent(playerDAO -> setGameDAO(this.gameTickController.storeEliminatedTick(this.getGameDAO(), playerDAO, (tick + 1))));
             this.setStatusDone();
         }
+    }
+
+    void storeDeathPlayerToDatabase(List<Long> activePlayer) {
+        LOGGER.info("[{}] Players diff -> Min one player is death!", this.getId());
+
+        List<Long> allPlayers = this.players.stream().map(ActionProvider::getId).distinct().toList();
+        LOGGER.debug("[{}] checkIsDone find death 1", this.getId());
+        List<Long> deathPlayers = gameDAO.getPlayerEliminationTicks().keySet().stream().map(PlayerDAO::getId).toList();
+        LOGGER.debug("[{}] checkIsDone find death 2", this.getId());
+
+        List<Long> diff = new ArrayList<>(allPlayers);
+        diff.removeAll(activePlayer);
+        diff.removeAll(deathPlayers);
+
+        LOGGER.info("[{}] Players with ids {} is now Death!", this.getId(), diff.toArray());
+
+        diff.forEach(playerId -> {
+            Optional<PlayerDAO> playerDAOOptional = this.getGameDAO().getPlayers().stream().filter(playerDAO -> Objects.equals(playerDAO.getId(), playerId)).findFirst();
+            if (playerDAOOptional.isPresent()) {
+                PlayerDAO playerDAO = playerDAOOptional.get();
+                setGameDAO(this.gameTickController.storeEliminatedTick(this.getGameDAO(), playerDAO, tick));
+            }
+            LOGGER.info("[{}] Players with id {} is now Death!", this.getId(), playerId);
+        });
+        LOGGER.info("[{}] Players is in database!", this.getId());
     }
 
     private void requestPlayerActions() {
@@ -231,7 +269,7 @@ public class GameBU implements Runnable {
                 BaseBU destinationBase = this.gameField.getBases().get(playerAction.getDestination());
 
                 if (sourceBase == null || destinationBase == null) {
-                    log.info(String.format("[%d] Player %d try to use illegal Action! %d -> %d: %d", this.id, player.getId(), playerAction.getSource(), playerAction.getDestination(), playerAction.getAmount()));
+                    LOGGER.info(String.format("[%d] Player %d try to use illegal Action! %d -> %d: %d", this.id, player.getId(), playerAction.getSource(), playerAction.getDestination(), playerAction.getAmount()));
                     return;
                 }
                 if (verifyPlayerAction(sourceBase, player.getId(), playerAction)) {
@@ -290,7 +328,7 @@ public class GameBU implements Runnable {
     }
 
     public void loadGame(GameTickDAO gameTickDAO) {
-        log.info("[{}] load GameBU from GameTickDAO with Tick {}", this.getId(), gameTickDAO.getTick());
+        LOGGER.info("[{}] load GameBU from GameTickDAO with Tick {}", this.getId(), gameTickDAO.getTick());
 
         Board board = gameTickMapper.toBoard(gameTickDAO);
         GameBU newGame = gameBUMapper.toGameBU(board);
@@ -302,7 +340,7 @@ public class GameBU implements Runnable {
         this.remainingPlayers = newGame.remainingPlayers;
 
         if (this.players.size() != board.getGame().getPlayerCount()) {
-            log.error("[{}] Can't load game, Player Count is not egle! {} != {}", this.getId(), this.players.size(), board.getGame().getPlayerCount());
+            LOGGER.error("[{}] Can't load game, Player Count is not egle! {} != {}", this.getId(), this.players.size(), board.getGame().getPlayerCount());
             throw new IllegalStateException("Can't load game, Player Count is not egle!");
         }
 

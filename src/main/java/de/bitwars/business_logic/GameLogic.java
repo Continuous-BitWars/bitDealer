@@ -87,7 +87,7 @@ public class GameLogic {
             if (playerDAO.getProviderUrl().startsWith("http")) {
                 actionProvider = new RemotePlayer(playerDAO.getId(), playerDAO.getName(), playerDAO.getProviderUrl(), playerDAO.getColor());
             } else {
-                actionProvider = new DummyPlayer(playerDAO.getId() + 1000, playerDAO.getColor());
+                actionProvider = new DummyPlayer(playerDAO.getId(), playerDAO.getColor());
             }
             gameBU.addPlayer(actionProvider);
         });
@@ -101,7 +101,7 @@ public class GameLogic {
 
         synchronized (this) {
             if (this.runningGames.get(gameBU) == null || this.runningGames.get(gameBU).isCancelled()) {
-                this.runningGames.put(gameBU, this.scheduler.scheduleAtFixedRate(gameBU, 0, gameDAO.getTimeBetweenTicks(), TimeUnit.SECONDS));
+                this.runningGames.put(gameBU, this.scheduler.scheduleAtFixedRate(gameBU, 5, gameDAO.getTimeBetweenTicks(), TimeUnit.SECONDS));
                 gameBU.setStatusRunning();
             } else {
                 LOGGER.info("Error by start Game: {} -> {}, Game is still Running.", gameBU.getId(), gameBU.getName());

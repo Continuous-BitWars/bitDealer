@@ -27,7 +27,7 @@ public class GameScheduler {
     GameController gameController;
 
     @Transactional
-    @Scheduled(delayed = "60s", every = "60s")
+    @Scheduled(delayed = "10s", every = "60s")
     void cleanupFinishedGames() {
         LOGGER.info("Scheduled to check league state");
 
@@ -43,7 +43,8 @@ public class GameScheduler {
         });
     }
 
-    private void startGameForLeague(LeagueDAO league) {
+    @Transactional
+    void startGameForLeague(LeagueDAO league) {
         LOGGER.debug("Starting game for league {}: {}", league.getId(), league.getName());
 
 

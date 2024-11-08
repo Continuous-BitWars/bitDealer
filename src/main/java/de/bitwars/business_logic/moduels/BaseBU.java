@@ -30,8 +30,11 @@ public class BaseBU {
         if (this.playerId == 0) {
             return;
         }
-
-        GameConfigBaseLevelsBU baseLevel = configBaseLevels.get(this.level);
+        int maxLevel = configBaseLevels.size();
+        if (this.level <= 0 || this.level > maxLevel) {
+            return;
+        }
+        GameConfigBaseLevelsBU baseLevel = configBaseLevels.get(this.level - 1);
 
         if (this.population < baseLevel.getMaxPopulation()) {
             this.population += baseLevel.getSpawnRate();
@@ -55,14 +58,16 @@ public class BaseBU {
     public void upgrade(int amount, List<GameConfigBaseLevelsBU> configBaseLevels) {
         this.unitsUntilUpgrade += amount;
 
-        if (this.level >= configBaseLevels.size()) {
+        int maxLevel = configBaseLevels.size();
+        if (this.level <= 0 || this.level >= maxLevel) {
             return;
         }
-        GameConfigBaseLevelsBU baseLevel = configBaseLevels.get(this.level + 1);
+        GameConfigBaseLevelsBU currentBaseLevel = configBaseLevels.get(this.level - 1);
 
-        if (this.unitsUntilUpgrade > baseLevel.getUpgradeCost()) {
-            this.unitsUntilUpgrade -= baseLevel.getUpgradeCost();
+        while (this.level < maxLevel && this.unitsUntilUpgrade >= currentBaseLevel.getUpgradeCost()) {
+            this.unitsUntilUpgrade -= currentBaseLevel.getUpgradeCost();
             this.level++;
+            currentBaseLevel = configBaseLevels.get(this.level - 1);
         }
     }
 

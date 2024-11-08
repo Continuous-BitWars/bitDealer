@@ -298,7 +298,8 @@ public class GameBU implements Runnable {
         });
     }
 
-    private void cleanup() {
+
+    public void cleanup() {
         List<BoardActionsBU> newBoardActions = this.gameField.getBoardActions().stream()
                 .filter(i -> !i.isInDestination())
                 .filter(i -> i.getAmount() > 0)

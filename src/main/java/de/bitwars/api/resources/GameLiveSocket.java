@@ -51,6 +51,11 @@ public class GameLiveSocket {
             String pubSubMessageString = pubSubMessage.getMessage().toString();
             log.debug("pubSubMessage {} {}: {}", session.getId(), pubSubMessage.getTopic(), pubSubMessageString);
 
+            if (pubSubMessage.getTopic().equalsIgnoreCase("ping")) {
+                this.gameLiveController.ping(session);
+                return;
+            }
+
             String[] topic = pubSubMessage.getTopic().split("_");
             if (topic.length == 2 && topic[0].equals("game")) {
                 Long gameId = Long.parseLong(topic[1]);

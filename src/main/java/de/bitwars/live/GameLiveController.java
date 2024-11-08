@@ -78,21 +78,34 @@ public class GameLiveController {
     }
 
     private void sendSuccessToSession(Long gameId, Session session) {
-        return;
-        /*
-        int count = Optional.ofNullable(this.sessions.get(gameId)).orElse(Collections.emptyList()).size();
-        log.info("topic info {}: {}", gameId, count);
 
+        /*
+        TODO: check frontend for handle success messages
         PubSubMessage response = new PubSubMessage("game_" + gameId, "success");
         try {
-            session.getAsyncRemote().sendObject(this.objectMapper.writeValueAsString(response), result -> {
+            String message = objectMapper.writeValueAsString(response);
+            session.getAsyncRemote().sendObject(message, result -> {
                 if (result.getException() != null) {
-                    System.out.println("Unable to send message: " + result.getException());
+                    log.error("Unable to send message: " + result.getException());
                 }
             });
         } catch (JsonProcessingException e) {
-            log.error("Unable to send message: " + e.getMessage());
+            throw new RuntimeException(e);
         }
         */
+    }
+
+    public void ping(Session session) {
+        PubSubMessage pubSubMessage = new PubSubMessage("PONG", null);
+        try {
+            String message = objectMapper.writeValueAsString(pubSubMessage);
+            session.getAsyncRemote().sendObject(message, result -> {
+                if (result.getException() != null) {
+                    log.error("Unable to send message: " + result.getException());
+                }
+            });
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -4,10 +4,13 @@ import de.bitwars.api.interfaces.LeagueApi;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
+import de.bitwars.api.models.Score;
 import de.bitwars.models.league.LeagueController;
 import de.bitwars.models.league.dao.LeagueDAO;
 import de.bitwars.models.league.mapper.LeagueMapper;
+import de.bitwars.models.scoreboard.ScoreboardController;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +24,8 @@ public class LeagueResource implements LeagueApi {
 
     private final LeagueMapper leagueMapper;
     private final LeagueController leagueController;
-
+    @Inject
+    ScoreboardController scoreboardController;
 
     @Override
     public League createLeague(League league) {
@@ -34,6 +38,17 @@ public class LeagueResource implements LeagueApi {
     public void deleteLeague(long leagueId) {
         leagueController.deleteLeague(leagueId);
 
+    }
+
+    @Override
+    public Score getLeagueScoreboard(long leagueId) {
+        Optional<LeagueDAO> leagueDAO = leagueController.getLeagueById(leagueId);
+        if (leagueDAO.isEmpty()) {
+            throw new NotFoundException();
+        }
+        Score score = this.scoreboardController.getScoreForGames(leagueDAO.get().getGames());
+        score.setLeague(leagueMapper.toLeague(leagueDAO.get()));
+        return score;
     }
 
     @Override

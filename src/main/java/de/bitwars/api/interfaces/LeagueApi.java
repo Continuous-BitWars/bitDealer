@@ -3,6 +3,7 @@ package de.bitwars.api.interfaces;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
+import de.bitwars.api.models.Score;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -43,6 +44,16 @@ public interface LeagueApi {
     void deleteLeague(@PathParam("leagueId") long leagueId);
 
     /**
+     * Retrieves a Score for League by its ID.
+     *
+     * @param leagueId The ID of the League
+     * @return The League with the specified ID
+     */
+    @GET
+    @Path("/{leagueId}/scoreboard")
+    Score getLeagueScoreboard(@PathParam("leagueId") long leagueId);
+
+    /**
      * Retrieves a League by its ID.
      *
      * @param leagueId The ID of the League
@@ -51,6 +62,7 @@ public interface LeagueApi {
     @GET
     @Path("/{leagueId}")
     League getLeagueById(@PathParam("leagueId") long leagueId);
+
 
     /**
      * Lists all available Leagues.

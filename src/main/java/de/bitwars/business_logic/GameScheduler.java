@@ -53,7 +53,7 @@ public class GameScheduler {
         List<PlayerDAO> playerDAOS = league.getPlayersSortedByUsageInGames();
 
         GameDAO newGame = gameController.createGame(name, gameMapDAO.getId());
-        league.getGames().add(newGame);
+        newGame.setLeague(league);
 
         int maxPlayerCount = Math.min(gameMapDAO.getMaxPlayerCount(), playerDAOS.size());
         playerDAOS.subList(0, maxPlayerCount).forEach(playerDAO -> {

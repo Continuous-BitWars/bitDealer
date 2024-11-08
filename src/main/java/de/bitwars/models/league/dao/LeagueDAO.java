@@ -64,7 +64,7 @@ public class LeagueDAO {
     )
     private List<GameMapDAO> gameMaps;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "league")
     private List<GameDAO> games;
 
     public List<GameDAO> getRunningGames() {

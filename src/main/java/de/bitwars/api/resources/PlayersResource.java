@@ -38,7 +38,6 @@ public class PlayersResource implements PlayersApi {
 
     @Override
     public Player createPlayer(Player player) {
-        //TODO: Randam name and color is value is empty
         PlayerDAO playerDAO = playerMapper.toPlayerDAO(player);
         playerDAO = playerController.createPlayer(playerDAO);
         return playerMapper.toPlayer(playerDAO);

@@ -203,4 +203,9 @@ public class GameController {
                 .orElseThrow(() -> new NotFoundException(String.format("Game with id %d not found.", gameId)))
                 .getGameTicks();
     }
+
+    public List<GameDAO> listGamesForPlayer(long playerId) {
+        return listGames().stream()
+                .filter(game -> game.getPlayers().stream().anyMatch(player -> player.getId().equals(playerId))).toList();
+    }
 }

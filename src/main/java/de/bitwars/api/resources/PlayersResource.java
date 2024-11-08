@@ -17,7 +17,15 @@
 package de.bitwars.api.resources;
 
 import de.bitwars.api.interfaces.PlayersApi;
+import de.bitwars.api.models.Game;
+import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
+import de.bitwars.models.game.GameController;
+import de.bitwars.models.game.dao.GameDAO;
+import de.bitwars.models.game.mapper.GameMapper;
+import de.bitwars.models.league.LeagueController;
+import de.bitwars.models.league.dao.LeagueDAO;
+import de.bitwars.models.league.mapper.LeagueMapper;
 import de.bitwars.models.player.PlayerController;
 import de.bitwars.models.player.dao.PlayerDAO;
 import de.bitwars.models.player.mapper.PlayerMapper;
@@ -33,7 +41,12 @@ import java.util.Optional;
 public class PlayersResource implements PlayersApi {
 
     private final PlayerController playerController;
+    private final GameController gameController;
+    private final LeagueController leagueController;
+
     private final PlayerMapper playerMapper;
+    private final GameMapper gameMapper;
+    private final LeagueMapper leagueMapper;
 
 
     @Override
@@ -55,6 +68,18 @@ public class PlayersResource implements PlayersApi {
             throw new NotFoundException();
         }
         return playerMapper.toPlayer(playerDAO.get());
+    }
+
+    @Override
+    public List<Game> getGamesForPlayerById(long playerId) {
+        List<GameDAO> gameDAOS = gameController.listGamesForPlayer(playerId);
+        return gameDAOS.stream().map(gameMapper::toGame).toList();
+    }
+
+    @Override
+    public List<League> getLeaguesForPlayerById(long playerId) {
+        List<LeagueDAO> leagueDAOS = leagueController.listLeagueForPlayer(playerId);
+        return leagueDAOS.stream().map(leagueMapper::toLeague).toList();
     }
 
     @Override

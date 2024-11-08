@@ -16,6 +16,8 @@
  */
 package de.bitwars.api.interfaces;
 
+import de.bitwars.api.models.Game;
+import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -62,6 +64,21 @@ public interface PlayersApi {
     @Path("/{playerId}")
     Player getPlayerById(@PathParam("playerId") long playerId);
 
+    /**
+     * @param playerId
+     * @return List of all Games with Player
+     */
+    @GET
+    @Path("/{playerId}/games")
+    List<Game> getGamesForPlayerById(@PathParam("playerId") long playerId);
+
+    /**
+     * @param playerId
+     * @return List of all Leagues with Player
+     */
+    @GET
+    @Path("/{playerId}/leagues")
+    List<League> getLeaguesForPlayerById(@PathParam("playerId") long playerId);
 
     /**
      * @return A list of players

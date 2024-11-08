@@ -168,4 +168,9 @@ public class LeagueController {
         }
         throw new NotFoundException(String.format("League or GameMap with id %d or %d not found", leagueId, gameMapId));
     }
+
+    public List<LeagueDAO> listLeagueForPlayer(long playerId) {
+        return listLeagues().stream()
+                .filter(league -> league.getPlayers().stream().anyMatch(player -> player.getId().equals(playerId))).toList();
+    }
 }

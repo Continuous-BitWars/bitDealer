@@ -23,7 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +51,9 @@ public class Game {
     @JsonProperty(value = "round_number", access = JsonProperty.Access.READ_ONLY)
     private int roundNumber;
 
-    private Map<Long, Integer> eliminatedPlayers = new HashMap<>();
+    private Map<Long, Integer> eliminatedPlayers;
+
+    private League league;
 }
 
 

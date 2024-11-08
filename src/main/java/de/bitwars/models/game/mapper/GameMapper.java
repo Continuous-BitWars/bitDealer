@@ -5,6 +5,7 @@ import de.bitwars.api.models.GameOptions;
 import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.game.repository.GameRepository;
 import de.bitwars.models.gameMap.mapper.GameMapMapper;
+import de.bitwars.models.league.mapper.LeagueMapper;
 import de.bitwars.models.player.mapper.PlayerMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,6 +25,8 @@ public class GameMapper {
 
     @Inject
     PlayerMapper playerMapper;
+    @Inject
+    LeagueMapper leagueMapper;
 
     public GameDAO toGameDAO(Game game) {
         if (game.getId() != null) {
@@ -42,6 +45,7 @@ public class GameMapper {
                     myGameDAO.setPlayers(players.stream().map(playerMapper::toPlayerDAO).toList());
                 });
                 //TODO: add mapping for myGameDAO.setPlayerEliminationTicks();
+                //TODO: add mapping for myGameDAO.setLeagueDAO();
                 return myGameDAO;
             }
         }
@@ -53,7 +57,8 @@ public class GameMapper {
                 game.getStatus(),
                 game.getPlayers().stream().map(playerMapper::toPlayerDAO).toList(),
                 new ArrayList<>(),
-                new HashMap<>()
+                new HashMap<>(),
+                null
         );
     }
 
@@ -72,7 +77,8 @@ public class GameMapper {
                 new GameOptions(gameDAO.getTimeBetweenTicks()),
                 gameDAO.getStatus(),
                 gameDAO.getGameTicks().size(),
-                eliminatedPlayers
+                eliminatedPlayers,
+                leagueMapper.toLeague(gameDAO.getLeague())
         );
     }
 }

@@ -19,6 +19,7 @@ package de.bitwars.models.game.dao;
 import de.bitwars.api.models.StatusEnum;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.gameTick.dao.GameTickDAO;
+import de.bitwars.models.league.dao.LeagueDAO;
 import de.bitwars.models.player.dao.PlayerDAO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -69,9 +70,9 @@ public class GameDAO {
     private Map<PlayerDAO, Integer> playerEliminationTicks;
 
 
-    //TODO: add to mapper and co
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //private LeagueDAO leagueDAO = null;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "league_id")
+    private LeagueDAO league;
 
     public GameDAO(String name, GameMapDAO gameMapDAO) {
         this.name = name;

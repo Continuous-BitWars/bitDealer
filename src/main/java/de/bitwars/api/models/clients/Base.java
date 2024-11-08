@@ -16,5 +16,6 @@ public class Base {
     private int level;
     private int unitsUntilUpgrade;
     private Position position;
+    private String name = "";
 }
 

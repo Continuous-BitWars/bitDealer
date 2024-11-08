@@ -29,7 +29,8 @@ public class GameBUMapper {
                 baseBU.getPopulation(),
                 baseBU.getLevel(),
                 baseBU.getUnitsUntilUpgrade(),
-                new Position(baseBU.getBasePosition().getX(), baseBU.getBasePosition().getY(), baseBU.getBasePosition().getZ())
+                new Position(baseBU.getBasePosition().getX(), baseBU.getBasePosition().getY(), baseBU.getBasePosition().getZ()),
+                baseBU.getName()
         )).toList();
 
         List<BaseLevel> baseLevels = gameBU.getGameConfig().getBaseLevelsConfig().stream().map(gameConfigBaseLevelsBU -> new BaseLevel(
@@ -74,7 +75,8 @@ public class GameBUMapper {
                                 ),
                                 base.getPopulation(),
                                 base.getLevel(),
-                                base.getUnitsUntilUpgrade()
+                                base.getUnitsUntilUpgrade(),
+                                base.getName()
                         )
                 )
         );

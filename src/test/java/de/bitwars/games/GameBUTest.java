@@ -27,9 +27,9 @@ public class GameBUTest {
         players.add(new DummyPlayer(1002, "#0000FF"));
 
         final List<BaseBU> bases = new ArrayList<>();
-        bases.add(new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0));
-        bases.add(new BaseBU(1, 0, new BasePositionBU(2, 0, 0), 10, 0, 0));
-        bases.add(new BaseBU(2, 2, new BasePositionBU(4, 0, 0), 10, 0, 0));
+        bases.add(new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, ""));
+        bases.add(new BaseBU(1, 0, new BasePositionBU(2, 0, 0), 10, 0, 0, ""));
+        bases.add(new BaseBU(2, 2, new BasePositionBU(4, 0, 0), 10, 0, 0, ""));
         final GameMapBU gameMapBU = new GameMapBU("Demo", 2, bases);
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();

@@ -31,7 +31,8 @@ public class GameFieldBU {
                                 ),
                                 baseBU.getPopulation(),
                                 baseBU.getLevel(),
-                                baseBU.getUnitsUntilUpgrade()
+                                baseBU.getUnitsUntilUpgrade(),
+                                baseBU.getName()
                         )
                 )
         );

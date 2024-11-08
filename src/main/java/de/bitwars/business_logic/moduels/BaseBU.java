@@ -20,6 +20,7 @@ public class BaseBU {
     private int population;
     private int level;
     private int unitsUntilUpgrade;
+    private String name;
 
     public int calcDistance(BaseBU destinationBase) {
         return basePosition.calcDistance(destinationBase.basePosition);

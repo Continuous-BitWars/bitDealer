@@ -209,4 +209,24 @@ public class BoardActionsBUTest {
         Assertions.assertThat(boardActionsBU.getProgress().getTraveled()).isEqualTo(10);
         Assertions.assertThat(boardActionsBU.getProgress().getDistance()).isEqualTo(10);
     }
+
+    @Test
+    void takeTick_10() {
+        BoardActionsBU boardActionsBU = new BoardActionsBU(
+                UUID.fromString("9852c739-cf1d-49ee-bb80-4d9c372eda22"),
+                2,
+                2,
+                2,
+                100,
+                new BoardActionsProgressBU(0, 0)
+        );
+
+        GameConfigPathsBU gameConfigPathsBU = new GameConfigPathsBU(5, 1);
+
+        boardActionsBU.takeTick(gameConfigPathsBU);
+
+        Assertions.assertThat(boardActionsBU.getAmount()).isEqualTo(100);
+        Assertions.assertThat(boardActionsBU.getProgress().getTraveled()).isEqualTo(0);
+        Assertions.assertThat(boardActionsBU.getProgress().getDistance()).isEqualTo(0);
+    }
 }

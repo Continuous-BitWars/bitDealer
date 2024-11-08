@@ -45,7 +45,7 @@ public class BaseBUTest {
 
     @Test
     void upgradeTest_2() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -54,13 +54,13 @@ public class BaseBUTest {
         baseBU.upgrade(1000, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
     void upgradeTest_3() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -69,13 +69,13 @@ public class BaseBUTest {
         baseBU.upgrade(1500, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(500);
     }
 
     @Test
     void upgradeTest_4() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -84,13 +84,13 @@ public class BaseBUTest {
         baseBU.upgrade(2000, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(1000);
     }
 
     @Test
     void upgradeTest_5() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -100,13 +100,13 @@ public class BaseBUTest {
         baseBU.upgrade(2000, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
     void upgradeTest_6() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -116,13 +116,13 @@ public class BaseBUTest {
         baseBU.upgrade(3500, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(1500);
     }
 
     @Test
     void upgradeTest_7() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -132,25 +132,25 @@ public class BaseBUTest {
         baseBU.upgrade(800, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(0);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(800);
 
         baseBU.upgrade(800, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(600);
 
         baseBU.upgrade(800, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(400);
 
         baseBU.upgrade(800, configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(10);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(1200);
     }
 
@@ -300,7 +300,7 @@ public class BaseBUTest {
 
     @Test
     void takeTick_1() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 10, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -310,13 +310,13 @@ public class BaseBUTest {
         baseBU.takeTick(configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(11);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(0);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
     void takeTick_2() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 20, 1, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 20, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -326,28 +326,12 @@ public class BaseBUTest {
         baseBU.takeTick(configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(20);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(0);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
     void takeTick_3() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 30, 1, 0, "");
-
-        ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
-        configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
-        configBasisLevel.add(new GameConfigBaseLevelsBU(40, 1000, 2));
-        configBasisLevel.add(new GameConfigBaseLevelsBU(60, 1000, 3));
-
-        baseBU.takeTick(configBasisLevel);
-
-        Assertions.assertThat(baseBU.getPopulation()).isEqualTo(29);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(1);
-        Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
-    }
-
-    @Test
-    void takeTick_4() {
         BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 30, 0, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
@@ -357,14 +341,30 @@ public class BaseBUTest {
 
         baseBU.takeTick(configBasisLevel);
 
-        Assertions.assertThat(baseBU.getPopulation()).isEqualTo(30);
+        Assertions.assertThat(baseBU.getPopulation()).isEqualTo(29);
         Assertions.assertThat(baseBU.getLevel()).isEqualTo(0);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
+    void takeTick_4() {
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 30, 3, 0, "");
+
+        ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
+        configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
+        configBasisLevel.add(new GameConfigBaseLevelsBU(40, 1000, 2));
+        configBasisLevel.add(new GameConfigBaseLevelsBU(60, 1000, 3));
+
+        baseBU.takeTick(configBasisLevel);
+
+        Assertions.assertThat(baseBU.getPopulation()).isEqualTo(30);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
+    }
+
+    @Test
     void takeTick_5() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 20, 3, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 20, 2, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -374,13 +374,13 @@ public class BaseBUTest {
         baseBU.takeTick(configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(70);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
     void takeTick_6() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 70, 3, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 70, 2, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -390,13 +390,13 @@ public class BaseBUTest {
         baseBU.takeTick(configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(20);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(3);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(2);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 
     @Test
     void takeTick_7() {
-        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 70, 4, 0, "");
+        BaseBU baseBU = new BaseBU(0, 1, new BasePositionBU(0, 0, 0), 70, -1, 0, "");
 
         ArrayList<GameConfigBaseLevelsBU> configBasisLevel = new ArrayList<>();
         configBasisLevel.add(new GameConfigBaseLevelsBU(20, 1000, 1));
@@ -406,7 +406,7 @@ public class BaseBUTest {
         baseBU.takeTick(configBasisLevel);
 
         Assertions.assertThat(baseBU.getPopulation()).isEqualTo(70);
-        Assertions.assertThat(baseBU.getLevel()).isEqualTo(4);
+        Assertions.assertThat(baseBU.getLevel()).isEqualTo(-1);
         Assertions.assertThat(baseBU.getUnitsUntilUpgrade()).isEqualTo(0);
     }
 }

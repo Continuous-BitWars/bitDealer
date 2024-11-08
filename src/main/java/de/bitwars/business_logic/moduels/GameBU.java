@@ -257,7 +257,7 @@ public class GameBU implements Runnable {
     }
 
     private void requestPlayerActions() {
-        players.parallelStream().forEach(player -> {
+        players.forEach(player -> {
             if (this.gameField.getBases().values().stream().noneMatch(base -> base.getPlayerId() == player.getId())) {
                 return;
             }

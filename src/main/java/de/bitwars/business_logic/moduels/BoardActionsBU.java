@@ -34,6 +34,10 @@ public class BoardActionsBU {
     }
 
     public void takeTick(GameConfigPathsBU configPaths) {
+        if (this.source == this.destination) {
+            log.debug("no tick is to self");
+            return;
+        }
         if (isInDestination()) {
             log.warn("Calculation over BoardActions in Destination");
             return;

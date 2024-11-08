@@ -16,11 +16,9 @@
  */
 package de.bitwars.models.league.mapper;
 
-import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
-import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.game.mapper.GameMapper;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.gameMap.mapper.GameMapMapper;
@@ -31,6 +29,7 @@ import de.bitwars.models.player.mapper.PlayerMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +51,6 @@ public class LeagueMapper {
     public LeagueDAO toLeagueDAO(League league) {
         List<PlayerDAO> playerDAOs = league.getPlayers().stream().map(playerMapper::toPlayerDAO).toList();
         List<GameMapDAO> gameMapDAOs = league.getMaps().stream().map(gameMapMapper::toGameMapDAO).toList();
-        List<GameDAO> gameDAOs = league.getGames().stream().map(gameMapper::toGameDAO).toList();
 
         if (league.getId() != null) {
             Optional<LeagueDAO> leagueDAO = leagueRepository.findByIdOptional(league.getId());
@@ -67,7 +65,7 @@ public class LeagueMapper {
                 return myLeagueDAO;
             }
         }
-        return new LeagueDAO(null, league.getName(), league.getParallelGames(), league.getStatus(), playerDAOs, gameMapDAOs, gameDAOs);
+        return new LeagueDAO(null, league.getName(), league.getParallelGames(), league.getStatus(), playerDAOs, gameMapDAOs, new ArrayList<>());
     }
 
     public League toLeague(LeagueDAO leagueDAO) {
@@ -77,7 +75,6 @@ public class LeagueMapper {
 
         List<Player> players = leagueDAO.getPlayers().stream().map(playerMapper::toPlayer).toList();
         List<GameMap> gameMaps = leagueDAO.getGameMaps().stream().map(gameMapMapper::toGameMap).toList();
-        List<Game> games = leagueDAO.getGames().stream().map(gameMapper::toGame).toList();
-        return new League(leagueDAO.getId(), leagueDAO.getName(), leagueDAO.getStatus(), leagueDAO.getParallelGames(), players, gameMaps, games);
+        return new League(leagueDAO.getId(), leagueDAO.getName(), leagueDAO.getStatus(), leagueDAO.getParallelGames(), players, gameMaps, leagueDAO.getGames().size());
     }
 }

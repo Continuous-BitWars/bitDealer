@@ -1,10 +1,12 @@
 package de.bitwars.api.resources;
 
 import de.bitwars.api.interfaces.LeagueApi;
+import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
 import de.bitwars.api.models.Score;
+import de.bitwars.models.game.mapper.GameMapper;
 import de.bitwars.models.league.LeagueController;
 import de.bitwars.models.league.dao.LeagueDAO;
 import de.bitwars.models.league.mapper.LeagueMapper;
@@ -26,6 +28,8 @@ public class LeagueResource implements LeagueApi {
     private final LeagueController leagueController;
     @Inject
     ScoreboardController scoreboardController;
+    @Inject
+    GameMapper gameMapper;
 
     @Override
     public League createLeague(League league) {
@@ -50,6 +54,16 @@ public class LeagueResource implements LeagueApi {
         score.setLeague(leagueMapper.toLeague(leagueDAO.get()));
         return score;
     }
+
+    @Override
+    public List<Game> getLeagueGames(long leagueId) {
+        Optional<LeagueDAO> leagueDAOOptional = leagueController.getLeagueById(leagueId);
+        if (leagueDAOOptional.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return leagueDAOOptional.get().getGames().stream().map(gameMapper::toGame).toList();
+    }
+
 
     @Override
     public League getLeagueById(long leagueId) {

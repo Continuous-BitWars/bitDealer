@@ -1,5 +1,6 @@
 package de.bitwars.api.interfaces;
 
+import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
@@ -47,11 +48,21 @@ public interface LeagueApi {
      * Retrieves a Score for League by its ID.
      *
      * @param leagueId The ID of the League
-     * @return The League with the specified ID
+     * @return The Scoreboard of League with the specified ID
      */
     @GET
     @Path("/{leagueId}/scoreboard")
     Score getLeagueScoreboard(@PathParam("leagueId") long leagueId);
+
+    /**
+     * Retrieves a List of Games of League by its ID.
+     *
+     * @param leagueId The ID of the League
+     * @return The Games of League with the specified ID
+     */
+    @GET
+    @Path("/{leagueId}/games")
+    List<Game> getLeagueGames(@PathParam("leagueId") long leagueId);
 
     /**
      * Retrieves a League by its ID.

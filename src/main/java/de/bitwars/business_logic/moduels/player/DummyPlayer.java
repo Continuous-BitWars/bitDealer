@@ -55,7 +55,6 @@ public class DummyPlayer implements ActionProvider {
                 }
                 BaseBU baseSource = ownBases.get(rand.nextInt(ownBases.size()));
                 int sendCount = rand.nextInt(baseSource.getPopulation() - 1);
-                log.warn("==> Player {} upgrade base {} with {}", getId(), baseSource.getUid(), sendCount);
                 return List.of(new PlayerActionBU(baseSource.getUid(), baseSource.getUid(), sendCount));
             } else {
                 List<BaseBU> ownBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id && baseBU.getPopulation() > 2).toList();

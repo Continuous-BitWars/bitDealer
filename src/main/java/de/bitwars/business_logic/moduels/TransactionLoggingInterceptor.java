@@ -18,12 +18,12 @@ public class TransactionLoggingInterceptor {
     @AroundInvoke
     public Object logTransaction(InvocationContext context) throws Exception {
         counter++;
-        LOGGER.warn("Method {} is starting a @Transactional! Open Transactions: {}", context.getMethod().getName(), counter);
+        LOGGER.debug("Method {} is starting a @Transactional! Open Transactions: {}", context.getMethod().getName(), counter);
         try {
             return context.proceed();
         } finally {
             counter--;
-            LOGGER.warn("Method {} has completed the @Transactional! Open Transactions: {}", context.getMethod().getName(), counter);
+            LOGGER.debug("Method {} has completed the @Transactional! Open Transactions: {}", context.getMethod().getName(), counter);
         }
     }
 }

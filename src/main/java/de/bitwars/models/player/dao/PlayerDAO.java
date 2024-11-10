@@ -24,6 +24,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Entity(name = "player")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,4 +38,18 @@ public class PlayerDAO {
     private String name;
     private String providerUrl;
     private String color;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlayerDAO playerDAO = (PlayerDAO) o;
+        return Objects.equals(id, playerDAO.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

@@ -50,25 +50,20 @@ public class DummyPlayer implements ActionProvider {
 
             if (rand.nextBoolean()) {
                 List<BaseBU> ownBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id && baseBU.getPopulation() > 2).toList();
+                if (ownBases.isEmpty()) {
+                    return List.of();
+                }
                 BaseBU baseSource = ownBases.get(rand.nextInt(ownBases.size()));
                 int sendCount = rand.nextInt(baseSource.getPopulation() - 1);
                 log.warn("==> Player {} upgrade base {} with {}", getId(), baseSource.getUid(), sendCount);
                 return List.of(new PlayerActionBU(baseSource.getUid(), baseSource.getUid(), sendCount));
             } else {
-                log.debug("requestStep {} -> 01", this.id);
                 List<BaseBU> ownBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() == this.id && baseBU.getPopulation() > 2).toList();
-                log.debug("requestStep {} -> 02", this.id);
                 List<BaseBU> otherBases = gameBU.getGameField().getBases().values().stream().filter(baseBU -> baseBU.getPlayerId() != this.id).toList();
-                log.debug("requestStep {} -> 03", this.id);
                 if (!ownBases.isEmpty() && !otherBases.isEmpty()) {
-                    log.debug("requestStep {} -> 04", this.id);
                     BaseBU baseSource = ownBases.get(rand.nextInt(ownBases.size()));
-                    log.debug("requestStep {} -> 05", this.id);
                     BaseBU baseTarget = otherBases.get(rand.nextInt(otherBases.size()));
-                    log.debug("requestStep {} -> 06", this.id);
                     int sendCount = rand.nextInt(baseSource.getPopulation() - 1);
-                    log.debug("requestStep {} -> 07", this.id);
-
                     return List.of(new PlayerActionBU(baseSource.getUid(), baseTarget.getUid(), sendCount));
                 }
             }

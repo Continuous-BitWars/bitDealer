@@ -105,7 +105,6 @@ public class GameBU implements Runnable {
     public void setStatusDone() {
         this.setGameStatus(GameStatus.DONE);
         this.getGameDAO().setStatus(StatusEnum.DONE);
-        this.entityManager.merge(this.getGameDAO());
     }
 
     public void addPlayer(ActionProvider player) {
@@ -145,7 +144,7 @@ public class GameBU implements Runnable {
         LOGGER.info("[{}] Tick {} is Start!", this.getId(), this.tick);
 
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
-            LOGGER.info("Cancel GameStep, GameStatus is not Running: {} -> {}", this.getId(), this.getName());
+            LOGGER.info("[{}] Cancel GameStep, GameStatus is not Running: {}", this.getId(), gameStatus.name());
             this.sendGameStateToWebsocket();
             return;
         }

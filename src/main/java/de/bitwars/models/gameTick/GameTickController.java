@@ -53,7 +53,7 @@ public class GameTickController {
         Optional<GameDAO> newGame = gameController.getGameById(gameDAO.getId());
         if (newGame.isPresent()) {
             GameDAO game = newGame.get();
-            game.getPlayerEliminationTicks().put(playerDAO, tick);
+            game.getPlayerEliminationTicks().putIfAbsent(playerDAO, tick);
             return game;
         } else {
             throw new RuntimeException("Could not find game for storeEliminatedTick: " + gameDAO.getId());

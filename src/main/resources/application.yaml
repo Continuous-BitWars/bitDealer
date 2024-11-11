@@ -49,8 +49,8 @@ quarkus:
     db-kind: ${DB_KIND:h2}
     jdbc:
       url: ${DB_URL:"jdbc:h2:/home/jboss/persistence/gamedb"}
-      max-size: 10
-      min-size: 2
+      max-size: 20
+      min-size: 10
     username: ${DB_USERNAME:""}
     password: ${DB_PASSWORD:""}
 

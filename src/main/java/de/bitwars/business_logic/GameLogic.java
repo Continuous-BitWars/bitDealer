@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
@@ -133,4 +134,18 @@ public class GameLogic {
         LOGGER.info("[{}] Game is not schedule! Update to Stopped", gameId);
         return false;
     }
+
+
+    @Scheduled(delayed = "10s", every = "10s")
+    void checkPool() {
+        LOGGER.info("Check Thread Pool size: {}/{}", getRunningThreadCount(), executorPoolSize);
+    }
+
+    public int getRunningThreadCount() {
+        if (scheduler instanceof ThreadPoolExecutor threadPoolExecutor) {
+            return threadPoolExecutor.getActiveCount();
+        }
+        throw new UnsupportedOperationException("Scheduler is not an instance of ThreadPoolExecutor");
+    }
+
 }

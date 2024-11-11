@@ -104,11 +104,9 @@ game:
     #      database:
     #        generation: drop-and-create
     datasource:
-      db-kind: ${DB_KIND:h2}
+      db-kind: h2
       jdbc:
-        url: ${DB_URL:"jdbc:h2:./gamedb"}
-      username: ${DB_USERNAME:""}
-      password: ${DB_PASSWORD:""}
+        url: "jdbc:h2:./gamedb"
     log:
       level: INFO
       category:
@@ -118,5 +116,6 @@ game:
 "%test":
   quarkus:
     datasource:
+      db-kind: h2
       jdbc:
         url: "jdbc:h2:mem:gamedb"

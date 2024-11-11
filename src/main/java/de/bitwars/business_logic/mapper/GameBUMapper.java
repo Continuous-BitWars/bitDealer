@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -30,7 +31,7 @@ public class GameBUMapper {
                 baseBU.getLevel(),
                 baseBU.getUnitsUntilUpgrade(),
                 new Position(baseBU.getBasePosition().getX(), baseBU.getBasePosition().getY(), baseBU.getBasePosition().getZ()),
-                baseBU.getName()
+                Optional.ofNullable(baseBU.getName()).orElse("")
         )).toList();
 
         List<BaseLevel> baseLevels = gameBU.getGameConfig().getBaseLevelsConfig().stream().map(gameConfigBaseLevelsBU -> new BaseLevel(
@@ -76,7 +77,7 @@ public class GameBUMapper {
                                 base.getPopulation(),
                                 base.getLevel(),
                                 base.getUnitsUntilUpgrade(),
-                                base.getName()
+                                Optional.ofNullable(base.getName()).orElse("")
                         )
                 )
         );

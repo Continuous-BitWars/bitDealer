@@ -142,6 +142,7 @@ public class GameBU implements Runnable {
     @Override
     public void run() {
         LOGGER.info("[{}] Tick {} is Start!", this.getId(), this.tick);
+        final long timeStart = System.currentTimeMillis();
 
         if (!this.gameStatus.equals(GameStatus.RUNNING)) {
             LOGGER.info("[{}] Cancel GameStep, GameStatus is not Running: {}", this.getId(), gameStatus.name());
@@ -176,7 +177,14 @@ public class GameBU implements Runnable {
         cleanup();
         checkIsDone();
 
-        LOGGER.info("[{}] Tick {} is Done!", this.getId(), this.tick);
+        final long timeEnd = System.currentTimeMillis();
+
+        long time = (timeEnd - timeStart);
+        LOGGER.info("[{}] Tick {} is Done! Tick needs: {} ms", this.getId(), this.tick, time);
+
+        if (time > 1000) {
+            LOGGER.warn("[{}] Tick {} Needs longer: {} ms", this.getId(), this.tick, time);
+        }
         this.tick++;
 
     }

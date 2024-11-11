@@ -38,7 +38,7 @@ public class GameLogic {
     @ConfigProperty(name = "game.executor.poolsize")
     int executorPoolSize;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(Math.max(executorPoolSize, 5));
+    private final ScheduledExecutorService scheduler;
     private final Map<GameBU, ScheduledFuture<?>> runningGames = new TreeMap<>(Comparator.comparing(GameBU::getId));
 
     @Inject
@@ -49,6 +49,13 @@ public class GameLogic {
     @Inject
     GameMapBUMapper gameMapBUMapper;
 
+
+    public GameLogic() {
+        LOGGER.info("GameLogic started");
+        int finaleExecutorPoolSize = Math.max(executorPoolSize, 5);
+        LOGGER.info("Started scheduler with {} Threads", finaleExecutorPoolSize);
+        scheduler = Executors.newScheduledThreadPool(finaleExecutorPoolSize);
+    }
 
     @PostConstruct
     public void init() {

@@ -51,6 +51,7 @@ quarkus:
       url: ${DB_URL:"jdbc:h2:/home/jboss/persistence/gamedb"}
     username: ${DB_USERNAME:""}
     password: ${DB_PASSWORD:""}
+    max-size: 10
   hibernate-orm:
     database:
       generation: update
@@ -107,6 +108,8 @@ game:
       db-kind: h2
       jdbc:
         url: "jdbc:h2:./gamedb"
+      username: ""
+      password: ""
     log:
       level: INFO
       category:

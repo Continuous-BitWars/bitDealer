@@ -52,7 +52,7 @@ public class GameDAO {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     @JoinTable(
             name = "games_player",
             joinColumns = @JoinColumn(name = "game_id"),
@@ -60,17 +60,17 @@ public class GameDAO {
     )
     private List<PlayerDAO> players;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "game")
+    @OneToMany(mappedBy = "game")
     private List<GameTickDAO> gameTicks;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection()
     @CollectionTable(name = "player_elimination_ticks", joinColumns = @JoinColumn(name = "game_id"))
     @MapKeyJoinColumn(name = "player_id")
     @Column(name = "elimination_tick")
     private Map<PlayerDAO, Integer> playerEliminationTicks;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "league_id")
     private LeagueDAO league;
 

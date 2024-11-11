@@ -63,7 +63,7 @@ public class GameLogic {
     @Transactional
     @Scheduled(delayed = "30s", every = "30s")
     void cleanupFinishedGames() {
-        LOGGER.debug("Scheduled to cleanup finished Games");
+        LOGGER.info("Scheduled to cleanup finished Games");
         List<Long> ids = this.runningGames.keySet().stream()
                 .filter(gameBU -> gameBU.getGameStatus().equals(GameStatus.DONE))
                 .peek(GameBU::setStatusDone)

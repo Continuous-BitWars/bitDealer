@@ -28,7 +28,7 @@ public class GameScheduler {
 
     @Transactional
     @Scheduled(delayed = "10s", every = "60s")
-    void cleanupFinishedGames() {
+    void checkLeagueState() {
         LOGGER.info("Scheduled to check league state");
 
         List<LeagueDAO> leagueDAOs = this.leagueRepository.findByStatus(StatusEnum.RUNNING);

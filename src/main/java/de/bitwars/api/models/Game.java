@@ -40,8 +40,7 @@ public class Game {
 
     @JsonProperty("game_map")
     private GameMap gameMap;
-    //TODO: add GameConfig
-
+    
     @JsonProperty(value = "game_options", access = JsonProperty.Access.READ_ONLY)
     private GameOptions gameOptions;
 

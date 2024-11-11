@@ -20,15 +20,7 @@ import de.bitwars.api.models.StatusEnum;
 import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.player.dao.PlayerDAO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,7 +51,7 @@ public class LeagueDAO {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "league_player",
             joinColumns = @JoinColumn(name = "league_id"),
@@ -68,7 +60,7 @@ public class LeagueDAO {
     private List<PlayerDAO> players;
 
     // Many-to-Many relationship with GameMapDAO using List
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "league_game_map",
             joinColumns = @JoinColumn(name = "league_id"),
@@ -76,7 +68,7 @@ public class LeagueDAO {
     )
     private List<GameMapDAO> gameMaps;
 
-    @OneToMany(mappedBy = "league")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "league")
     private List<GameDAO> games;
 
     public List<GameDAO> getRunningGames() {

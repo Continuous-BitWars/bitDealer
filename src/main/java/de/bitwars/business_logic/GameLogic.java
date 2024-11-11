@@ -112,14 +112,20 @@ public class GameLogic {
         return true;
     }
 
+
+    @Transactional
     public boolean stopGame(long gameId) {
         Optional<GameBU> gameBU = this.getGameById(gameId);
-        if (gameBU.isPresent()) {
+        GameDAO gameDAO = gameRepository.findById(gameId);
+
+        if (gameBU.isPresent() && gameDAO != null) {
             GameBU game = gameBU.get();
             this.runningGames.get(game).cancel(true);
             this.runningGames.remove(game);
             if (game.getGameStatus() != GameStatus.DONE) {
-                game.setStatusStopped();
+                gameDAO.setStatus(StatusEnum.STOPPED);
+            } else {
+                gameDAO.setStatus(StatusEnum.DONE);
             }
             LOGGER.info("Stopped Game: {} -> {}", game.getId(), game.getName());
             return true;

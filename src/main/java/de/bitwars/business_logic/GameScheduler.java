@@ -39,6 +39,8 @@ public class GameScheduler {
                 for (int i = 0; i < toStartedGameCount; i++) {
                     this.startGameForLeague(league);
                 }
+            } else {
+                LOGGER.info("League {} info: {} - {} => {} => {}", league.getId(), league.getParallelGames(), league.getRunningGames().size(), toStartedGameCount, league.getRunningGames().stream().map(GameDAO::getId).toArray());
             }
         });
     }

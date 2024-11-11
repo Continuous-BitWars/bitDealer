@@ -52,7 +52,7 @@ public class GameLogic {
 
     public GameLogic() {
         LOGGER.info("GameLogic started");
-        int finaleExecutorPoolSize = Math.max(executorPoolSize, 20);
+        int finaleExecutorPoolSize = Math.max(executorPoolSize, 10);
         LOGGER.info("Started scheduler with {} Threads (executorPoolSize: {})", finaleExecutorPoolSize, executorPoolSize);
         scheduler = Executors.newScheduledThreadPool(finaleExecutorPoolSize);
     }

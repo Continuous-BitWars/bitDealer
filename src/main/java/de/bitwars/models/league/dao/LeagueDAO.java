@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,6 +44,9 @@ public class LeagueDAO {
     private Long id;
     private String name;
     private int parallelGames;
+
+    @ColumnDefault("5")
+    private int defaultTimeBetweenTicks;
 
     @Enumerated(EnumType.STRING)
     private StatusEnum status;

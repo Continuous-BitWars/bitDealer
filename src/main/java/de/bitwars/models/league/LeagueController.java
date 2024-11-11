@@ -79,10 +79,11 @@ public class LeagueController {
     }
 
     @Transactional
-    public LeagueDAO startLeague(long leagueId) {
+    public LeagueDAO startLeague(long leagueId, int timeBetweenTicks) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
         if (leagueDAOOptional.isPresent()) {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
+            leagueDAO.setDefaultTimeBetweenTicks(timeBetweenTicks);
             leagueDAO.setStatus(StatusEnum.RUNNING);
             return leagueDAO;
         }

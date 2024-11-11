@@ -18,8 +18,8 @@ package de.bitwars.models.league.mapper;
 
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
+import de.bitwars.api.models.LeagueOptions;
 import de.bitwars.api.models.Player;
-import de.bitwars.models.game.mapper.GameMapper;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.gameMap.mapper.GameMapMapper;
 import de.bitwars.models.league.dao.LeagueDAO;
@@ -44,9 +44,6 @@ public class LeagueMapper {
 
     @Inject
     PlayerMapper playerMapper;
-    @Inject
-    GameMapper gameMapper;
-
 
     public LeagueDAO toLeagueDAO(League league) {
         List<PlayerDAO> playerDAOs = league.getPlayers().stream().map(playerMapper::toPlayerDAO).toList();
@@ -61,11 +58,12 @@ public class LeagueMapper {
                 myLeagueDAO.setStatus(league.getStatus());
                 myLeagueDAO.setPlayers(playerDAOs);
                 myLeagueDAO.setGameMaps(gameMapDAOs);
+                myLeagueDAO.setDefaultTimeBetweenTicks(league.getLeagueOptions().getTimeBetweenTicks());
 
                 return myLeagueDAO;
             }
         }
-        return new LeagueDAO(null, league.getName(), league.getParallelGames(), league.getStatus(), playerDAOs, gameMapDAOs, new ArrayList<>());
+        return new LeagueDAO(null, league.getName(), league.getParallelGames(), league.getLeagueOptions().getTimeBetweenTicks(), league.getStatus(), playerDAOs, gameMapDAOs, new ArrayList<>());
     }
 
     public League toLeague(LeagueDAO leagueDAO) {
@@ -75,6 +73,16 @@ public class LeagueMapper {
 
         List<Player> players = leagueDAO.getPlayers().stream().map(playerMapper::toPlayer).toList();
         List<GameMap> gameMaps = leagueDAO.getGameMaps().stream().map(gameMapMapper::toGameMap).toList();
-        return new League(leagueDAO.getId(), leagueDAO.getName(), leagueDAO.getStatus(), leagueDAO.getParallelGames(), players, gameMaps, leagueDAO.getGames().size());
+        
+        return new League(
+                leagueDAO.getId(),
+                leagueDAO.getName(),
+                leagueDAO.getStatus(),
+                leagueDAO.getParallelGames(),
+                players,
+                gameMaps,
+                leagueDAO.getGames().size(),
+                new LeagueOptions(leagueDAO.getDefaultTimeBetweenTicks())
+        );
     }
 }

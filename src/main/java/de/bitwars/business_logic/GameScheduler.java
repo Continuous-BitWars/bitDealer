@@ -63,6 +63,6 @@ public class GameScheduler {
             gameController.addPlayerToGame(newGame.getId(), playerDAO);
         });
 
-        gameController.startGame(newGame.getId(), 5);
+        gameController.startGame(newGame.getId(), league.getDefaultTimeBetweenTicks());
     }
 }

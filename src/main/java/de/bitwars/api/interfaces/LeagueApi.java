@@ -3,7 +3,6 @@ package de.bitwars.api.interfaces;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
-import de.bitwars.api.models.LeagueOptions;
 import de.bitwars.api.models.Player;
 import de.bitwars.api.models.Score;
 import jakarta.ws.rs.Consumes;
@@ -99,13 +98,12 @@ public interface LeagueApi {
 
     /**
      * @param leagueId
-     * @param leagueOptions
      * @return Start League
      * @return Started League
      */
     @POST
     @Path("/{leagueId}/running")
-    League startLeague(@PathParam("leagueId") long leagueId, LeagueOptions leagueOptions);
+    League startLeague(@PathParam("leagueId") long leagueId);
 
     /**
      * @param leagueId

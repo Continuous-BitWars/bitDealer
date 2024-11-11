@@ -4,7 +4,6 @@ import de.bitwars.api.interfaces.LeagueApi;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
-import de.bitwars.api.models.LeagueOptions;
 import de.bitwars.api.models.Player;
 import de.bitwars.api.models.Score;
 import de.bitwars.models.game.mapper.GameMapper;
@@ -89,8 +88,8 @@ public class LeagueResource implements LeagueApi {
     }
 
     @Override
-    public League startLeague(long leagueId, LeagueOptions leagueOptions) {
-        LeagueDAO leagueDAO = leagueController.startLeague(leagueId, leagueOptions.getTimeBetweenTicks());
+    public League startLeague(long leagueId) {
+        LeagueDAO leagueDAO = leagueController.startLeague(leagueId);
         return leagueMapper.toLeague(leagueDAO);
     }
 

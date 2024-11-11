@@ -72,6 +72,7 @@ public class LeagueController {
             LeagueDAO myLeagueDAO = leagueDAO.get();
             myLeagueDAO.setName(newLeagueDAO.getName());
             myLeagueDAO.setParallelGames(newLeagueDAO.getParallelGames());
+            myLeagueDAO.setDefaultTimeBetweenTicks(newLeagueDAO.getDefaultTimeBetweenTicks());
             return myLeagueDAO;
         }
         throw new NotFoundException(String.format("League with id %s not found", newLeagueDAO.getId()));
@@ -79,11 +80,10 @@ public class LeagueController {
     }
 
     @Transactional
-    public LeagueDAO startLeague(long leagueId, int timeBetweenTicks) {
+    public LeagueDAO startLeague(long leagueId) {
         Optional<LeagueDAO> leagueDAOOptional = this.getLeagueById(leagueId);
         if (leagueDAOOptional.isPresent()) {
             LeagueDAO leagueDAO = leagueDAOOptional.get();
-            leagueDAO.setDefaultTimeBetweenTicks(timeBetweenTicks);
             leagueDAO.setStatus(StatusEnum.RUNNING);
             return leagueDAO;
         }

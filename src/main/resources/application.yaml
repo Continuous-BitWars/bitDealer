@@ -46,9 +46,11 @@ quarkus:
 
 
   datasource:
-    db-kind: h2
+    db-kind: ${DB_KIND:h2}
     jdbc:
-      url: "jdbc:h2:/home/jboss/persistence/gamedb"
+      url: ${DB_URL:"jdbc:h2:/home/jboss/persistence/gamedb"}
+    username: ${DB_USERNAME:""}
+    password: ${DB_PASSWORD:""}
   hibernate-orm:
     database:
       generation: update
@@ -102,8 +104,11 @@ game:
     #      database:
     #        generation: drop-and-create
     datasource:
+      db-kind: ${DB_KIND:h2}
       jdbc:
-        url: "jdbc:h2:./gamedb"
+        url: ${DB_URL:"jdbc:h2:./gamedb"}
+      username: ${DB_USERNAME:""}
+      password: ${DB_PASSWORD:""}
     log:
       level: INFO
       category:

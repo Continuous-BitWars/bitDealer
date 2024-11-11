@@ -92,16 +92,6 @@ quarkus:
       "de.bitwars.api.resources":
         level: INFO
 
-tournament:
-  sleep:
-    duration: PT10S
-gameround:
-  sleep:
-    duration: PT1S
-step:
-  sleep:
-    duration: PT1S
-
 game:
   executor:
     poolsize: 10
@@ -118,7 +108,7 @@ game:
       level: INFO
       category:
         "de.bitwars":
-          level: DEBUG
+          level: INFO
 
 "%test":
   quarkus:

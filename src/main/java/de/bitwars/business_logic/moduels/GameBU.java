@@ -275,13 +275,15 @@ public class GameBU implements Runnable {
                 BaseBU destinationBase = this.gameField.getBases().get(playerAction.getDestination());
 
                 if (sourceBase == null || destinationBase == null) {
-                    LOGGER.info(String.format("[%d] Player %d try to use illegal Action! %d -> %d: %d", this.id, player.getId(), playerAction.getSource(), playerAction.getDestination(), playerAction.getAmount()));
+                    LOGGER.info(String.format("[%d] Player %d try to use illegal Action (sourceBase or destinationBase is null)! %d -> %d: %d", this.id, player.getId(), playerAction.getSource(), playerAction.getDestination(), playerAction.getAmount()));
                     return;
                 }
                 if (verifyPlayerAction(sourceBase, player.getId(), playerAction)) {
                     int distance = sourceBase.calcDistance(destinationBase);
                     sourceBase.moveAway(playerAction.getAmount());
                     this.gameField.getBoardActions().add(new BoardActionsBU(player.getId(), playerAction, distance));
+                } else {
+                    LOGGER.info(String.format("[%d] Player %d try to use illegal Action (verifyPlayerAction)! %d -> %d: %d", this.id, player.getId(), playerAction.getSource(), playerAction.getDestination(), playerAction.getAmount()));
                 }
             });
         });

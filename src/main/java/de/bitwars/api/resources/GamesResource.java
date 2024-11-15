@@ -34,6 +34,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.NotImplementedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,9 @@ import java.util.Optional;
 @ApplicationScoped
 @RequiredArgsConstructor
 public class GamesResource implements GamesApi {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GamesResource.class);
+
 
     private final GameController gameController;
     private final GameMapper gameMapper;
@@ -71,10 +76,29 @@ public class GamesResource implements GamesApi {
         return this.gameMapper.toGame(gameDAO.get());
     }
 
+
     @Override
     public List<Game> listGames(StatusEnum statusFilter) {
+
+        long startTotal = System.nanoTime();
+        LOGGER.info("Starting listGames with statusFilter: {}", statusFilter);
+
+        // Schritt 1: GameDAOs abrufen
+        long startFetch = System.nanoTime();
         List<GameDAO> gameDAOs = this.gameController.listGames(statusFilter);
-        return gameDAOs.stream().map(this.gameMapper::toGame).toList();
+        long endFetch = System.nanoTime();
+        LOGGER.info("Fetched games from controller in {} ms", (endFetch - startFetch) / 1_000_000);
+
+        // Schritt 2: GameDAOs zu Games mappen
+        long startMapping = System.nanoTime();
+        List<Game> games = gameDAOs.parallelStream().map(this.gameMapper::toGame).toList();
+        long endMapping = System.nanoTime();
+        LOGGER.info("Mapped games in {} ms", (endMapping - startMapping) / 1_000_000);
+
+        long endTotal = System.nanoTime();
+        LOGGER.info("listGames completed in {} ms", (endTotal - startTotal) / 1_000_000);
+
+        return games;
     }
 
     @Override

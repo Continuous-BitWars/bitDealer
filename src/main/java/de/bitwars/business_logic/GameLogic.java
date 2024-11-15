@@ -79,14 +79,11 @@ public class GameLogic {
     @Scheduled(delayed = "30s", every = "30s")
     void cleanupFinishedGames() {
         LOGGER.info("Scheduled to cleanup finished Games");
-        for (Long l : this.runningGames.keySet().stream()
+        List<Long> ids = this.runningGames.keySet().stream()
                 .filter(gameBU -> gameBU.getGameStatus().equals(GameStatus.DONE))
                 .peek(GameBU::setStatusDone)
-                .map(GameBU::getId)
-                .peek(this::stopGame).toList()) {
-
-        }
-
+                .map(GameBU::getId).toList();
+        ids.forEach(this::stopGame);
     }
 
     public Optional<GameBU> getGameById(long gameId) {

@@ -81,22 +81,22 @@ public class GamesResource implements GamesApi {
     public List<Game> listGames(StatusEnum statusFilter) {
 
         long startTotal = System.nanoTime();
-        LOGGER.info("Starting listGames with statusFilter: {}", statusFilter);
+        LOGGER.debug("Starting listGames with statusFilter: {}", statusFilter);
 
         // Schritt 1: GameDAOs abrufen
         long startFetch = System.nanoTime();
         List<GameDAO> gameDAOs = this.gameController.listGames(statusFilter);
         long endFetch = System.nanoTime();
-        LOGGER.info("Fetched games from controller in {} ms", (endFetch - startFetch) / 1_000_000);
+        LOGGER.debug("Fetched games from controller in {} ms", (endFetch - startFetch) / 1_000_000);
 
         // Schritt 2: GameDAOs zu Games mappen
         long startMapping = System.nanoTime();
         List<Game> games = gameDAOs.parallelStream().map(this.gameMapper::toGame).toList();
         long endMapping = System.nanoTime();
-        LOGGER.info("Mapped games in {} ms", (endMapping - startMapping) / 1_000_000);
+        LOGGER.debug("Mapped games in {} ms", (endMapping - startMapping) / 1_000_000);
 
         long endTotal = System.nanoTime();
-        LOGGER.info("listGames completed in {} ms", (endTotal - startTotal) / 1_000_000);
+        LOGGER.debug("listGames completed in {} ms", (endTotal - startTotal) / 1_000_000);
 
         return games;
     }

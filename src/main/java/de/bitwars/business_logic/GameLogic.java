@@ -11,6 +11,7 @@ import de.bitwars.business_logic.moduels.player.RemotePlayer;
 import de.bitwars.models.game.GameController;
 import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.game.repository.GameRepository;
+import de.bitwars.models.gameTick.repository.GameTickRepository;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -47,6 +48,9 @@ public class GameLogic {
     @Inject
     GameRepository gameRepository;
     @Inject
+    GameTickRepository gameTickRepository;
+
+    @Inject
     GameMapBUMapper gameMapBUMapper;
 
 
@@ -71,11 +75,14 @@ public class GameLogic {
     @Scheduled(delayed = "30s", every = "30s")
     void cleanupFinishedGames() {
         LOGGER.info("Scheduled to cleanup finished Games");
-        List<Long> ids = this.runningGames.keySet().stream()
+        for (Long l : this.runningGames.keySet().stream()
                 .filter(gameBU -> gameBU.getGameStatus().equals(GameStatus.DONE))
                 .peek(GameBU::setStatusDone)
-                .map(GameBU::getId).toList();
-        ids.forEach(this::stopGame);
+                .map(GameBU::getId)
+                .peek(this::stopGame).toList()) {
+
+        }
+
     }
 
     public Optional<GameBU> getGameById(long gameId) {
@@ -134,6 +141,7 @@ public class GameLogic {
                 gameDAO.setStatus(StatusEnum.STOPPED);
             } else {
                 gameDAO.setStatus(StatusEnum.DONE);
+                gameDAO.setGameTicksCount((int) gameTickRepository.countGameTicksFromGame(gameDAO));
             }
             LOGGER.info("Stopped Game: {} -> {}", game.getId(), game.getName());
             return true;

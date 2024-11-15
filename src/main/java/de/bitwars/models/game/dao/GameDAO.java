@@ -26,6 +26,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -73,6 +74,10 @@ public class GameDAO {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "league_id")
     private LeagueDAO league;
+    
+    // store gameRounds if Game is Done as cache
+    @ColumnDefault("NULL")
+    private Integer gameTicksCount;
 
     public GameDAO(String name, GameMapDAO gameMapDAO) {
         this.name = name;

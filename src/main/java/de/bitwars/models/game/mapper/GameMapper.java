@@ -71,6 +71,7 @@ public class GameMapper {
                 game.getPlayers().stream().map(playerMapper::toPlayerDAO).toList(),
                 new ArrayList<>(),
                 new HashMap<>(),
+                null,
                 null
         );
     }
@@ -123,7 +124,7 @@ public class GameMapper {
                 gameMap,
                 new GameOptions(gameDAO.getTimeBetweenTicks()),
                 gameDAO.getStatus(),
-                -1,
+                Optional.ofNullable(gameDAO.getGameTicksCount()).orElse((int) gameTickRepository.countGameTicksFromGame(gameDAO)),
                 eliminatedPlayers,
                 league
         );

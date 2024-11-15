@@ -56,7 +56,7 @@ jobs:
           docker push ghcr.io/${{ env.REPOSITORY_OWNER }}/${{ env.DEPLOYMENT_NAME }}
 
       - name: Deploy
-        if: env.DEPLOYMENT_TOKEN && github.ref == 'refs/heads/main'
+        if: env.DEPLOYMENT_TOKEN && github.ref == 'refs/heads/main' && false
         run: |-
           echo "${{ env.DEPLOYMENT_TOKEN }}" > kubeconfig.yaml
           kubectl --kubeconfig kubeconfig.yaml --namespace ${{ env.NAMESPACE }} delete secret api-user --ignore-not-found

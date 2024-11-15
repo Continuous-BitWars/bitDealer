@@ -71,9 +71,6 @@ public class LeagueDAO {
     @OneToMany(mappedBy = "league")
     private List<GameDAO> games;
 
-    public List<GameDAO> getRunningGames() {
-        return this.games.stream().filter(gameDAO -> gameDAO.getStatus() != StatusEnum.DONE).toList();
-    }
 
     public GameMapDAO getLeastUsedGameMap() {
         if (gameMaps == null || gameMaps.isEmpty()) {

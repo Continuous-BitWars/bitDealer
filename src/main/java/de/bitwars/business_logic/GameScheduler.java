@@ -3,6 +3,7 @@ package de.bitwars.business_logic;
 import de.bitwars.api.models.StatusEnum;
 import de.bitwars.models.game.GameController;
 import de.bitwars.models.game.dao.GameDAO;
+import de.bitwars.models.game.repository.GameRepository;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.league.dao.LeagueDAO;
 import de.bitwars.models.league.repository.LeagueRepository;
@@ -24,6 +25,9 @@ public class GameScheduler {
     LeagueRepository leagueRepository;
 
     @Inject
+    GameRepository gameRepository;
+
+    @Inject
     GameController gameController;
 
     @Transactional
@@ -33,14 +37,15 @@ public class GameScheduler {
 
         List<LeagueDAO> leagueDAOs = this.leagueRepository.findByStatus(StatusEnum.RUNNING);
         leagueDAOs.forEach(league -> {
-            int toStartedGameCount = league.getParallelGames() - league.getRunningGames().size();
+            long runningGamesCount = gameRepository.countGamesByLeagueAndStatusNot(league, StatusEnum.DONE);
+            int toStartedGameCount = league.getParallelGames() - (int) runningGamesCount;
             if (toStartedGameCount > 0) {
                 LOGGER.info("Starting {} games for league {}: {}", toStartedGameCount, league.getId(), league.getName());
                 for (int i = 0; i < toStartedGameCount; i++) {
                     this.startGameForLeague(league);
                 }
             } else {
-                LOGGER.info("League {} info: {} - {} => {} => {}", league.getId(), league.getParallelGames(), league.getRunningGames().size(), toStartedGameCount, league.getRunningGames().stream().map(GameDAO::getId).toArray());
+                LOGGER.info("League {} info: {} - {} => {}", league.getId(), league.getParallelGames(), runningGamesCount, toStartedGameCount);
             }
         });
     }

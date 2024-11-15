@@ -19,6 +19,7 @@ package de.bitwars.models.league.mapper;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
+import de.bitwars.models.game.repository.GameRepository;
 import de.bitwars.models.gameMap.dao.GameMapDAO;
 import de.bitwars.models.gameMap.mapper.GameMapMapper;
 import de.bitwars.models.league.dao.LeagueDAO;
@@ -37,6 +38,9 @@ public class LeagueMapper {
 
     @Inject
     LeagueRepository leagueRepository;
+
+    @Inject
+    GameRepository gameRepository;
 
     @Inject
     GameMapMapper gameMapMapper;
@@ -80,7 +84,7 @@ public class LeagueMapper {
                 leagueDAO.getParallelGames(),
                 players,
                 gameMaps,
-                leagueDAO.getGames().size(),
+                (int) gameRepository.countGamesByLeague(leagueDAO),
                 leagueDAO.getDefaultTimeBetweenTicks()
         );
     }

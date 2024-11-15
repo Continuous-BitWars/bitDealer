@@ -38,6 +38,4 @@ public class League {
 
     @JsonProperty(value = "default_time_between_ticks")
     private int defaultTimeBetweenTicks;
-
-
 }

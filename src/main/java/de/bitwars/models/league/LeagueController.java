@@ -171,7 +171,6 @@ public class LeagueController {
     }
 
     public List<LeagueDAO> listLeagueForPlayer(long playerId) {
-        return listLeagues().stream()
-                .filter(league -> league.getPlayers().stream().anyMatch(player -> player.getId().equals(playerId))).toList();
+        return leagueRepository.findLeaguesByPlayerId(playerId);
     }
 }

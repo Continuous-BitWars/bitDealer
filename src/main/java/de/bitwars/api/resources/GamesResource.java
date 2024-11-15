@@ -73,12 +73,7 @@ public class GamesResource implements GamesApi {
 
     @Override
     public List<Game> listGames(StatusEnum statusFilter) {
-        List<GameDAO> gameDAOs = this.gameController.listGames();
-        if (statusFilter != null) {
-            gameDAOs = gameDAOs.stream()
-                    .filter(game -> game.getStatus().equals(statusFilter))
-                    .toList();
-        }
+        List<GameDAO> gameDAOs = this.gameController.listGames(statusFilter);
         return gameDAOs.stream().map(this.gameMapper::toGame).toList();
     }
 

@@ -74,7 +74,10 @@ public class GameController {
         return gameRepository.findByIdOptional(gameId);
     }
 
-    public List<GameDAO> listGames() {
+    public List<GameDAO> listGames(StatusEnum statusFilter) {
+        if (statusFilter != null) {
+            return gameRepository.findByStatus(statusFilter);
+        }
         return gameRepository.listAll();
     }
 
@@ -205,7 +208,6 @@ public class GameController {
     }
 
     public List<GameDAO> listGamesForPlayer(long playerId) {
-        return listGames().stream()
-                .filter(game -> game.getPlayers().stream().anyMatch(player -> player.getId().equals(playerId))).toList();
+        return gameRepository.findGamesByPlayerId(playerId);
     }
 }

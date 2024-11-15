@@ -20,6 +20,10 @@ public class GameRepository implements PanacheRepository<GameDAO> {
         return list("league = ?1 and status != ?2", league, status);
     }
 
+    public List<GameDAO> findGamesByPlayerId(Long playerId) {
+        return list("SELECT g FROM games g JOIN g.players p WHERE p.id = ?1", playerId);
+    }
+
     public long countGamesByLeagueAndStatusNot(LeagueDAO league, StatusEnum status) {
         return count("league = ?1 and status != ?2", league, status);
     }

@@ -28,4 +28,8 @@ public class LeagueRepository implements PanacheRepository<LeagueDAO> {
     public List<LeagueDAO> findByStatus(StatusEnum status) {
         return list("status", status);
     }
+
+    public List<LeagueDAO> findLeaguesByPlayerId(Long playerId) {
+        return list("SELECT g FROM league g JOIN g.players p WHERE p.id = ?1", playerId);
+    }
 }

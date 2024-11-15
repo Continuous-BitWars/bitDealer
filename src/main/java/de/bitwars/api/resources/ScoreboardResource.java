@@ -40,7 +40,7 @@ public class ScoreboardResource implements ScoreboardApi {
 
     @Override
     public Score getScoreboard() {
-        List<GameDAO> gameDAOs = gameController.listGames();
+        List<GameDAO> gameDAOs = gameController.listGames(null);
         return this.scoreboardController.getScoreForGames(gameDAOs);
     }
 }

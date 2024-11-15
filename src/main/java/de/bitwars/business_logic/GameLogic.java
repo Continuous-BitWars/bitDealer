@@ -2,6 +2,7 @@ package de.bitwars.business_logic;
 
 import de.bitwars.api.models.StatusEnum;
 import de.bitwars.business_logic.factory.GameBUFactory;
+import de.bitwars.business_logic.mapper.GameBUMapper;
 import de.bitwars.business_logic.mapper.GameMapBUMapper;
 import de.bitwars.business_logic.moduels.ActionProvider;
 import de.bitwars.business_logic.moduels.GameBU;
@@ -53,6 +54,9 @@ public class GameLogic {
     @Inject
     GameMapBUMapper gameMapBUMapper;
 
+    @Inject
+    GameBUMapper gameBUMapper;
+
 
     public GameLogic() {
         LOGGER.info("GameLogic started");
@@ -100,7 +104,7 @@ public class GameLogic {
             ActionProvider actionProvider;
             //TODO: add provider for websocket
             if (playerDAO.getProviderUrl().startsWith("http")) {
-                actionProvider = new RemotePlayer(playerDAO.getId(), playerDAO.getName(), playerDAO.getProviderUrl(), playerDAO.getColor());
+                actionProvider = new RemotePlayer(playerDAO.getId(), playerDAO.getName(), playerDAO.getProviderUrl(), playerDAO.getColor(), this.gameBUMapper);
             } else {
                 actionProvider = new DummyPlayer(playerDAO.getId(), playerDAO.getColor());
             }

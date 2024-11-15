@@ -123,7 +123,7 @@ public class GameMapper {
                 gameMap,
                 new GameOptions(gameDAO.getTimeBetweenTicks()),
                 gameDAO.getStatus(),
-                (int) gameTickRepository.countGameTicksFromGame(gameDAO),
+                -1,
                 eliminatedPlayers,
                 league
         );

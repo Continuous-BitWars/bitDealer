@@ -131,7 +131,7 @@ public class GameMapper {
         LOGGER.debug("Created Game object in {} ms", (endCreation - startCreation) / 1_000_000);
 
         long endTotal = System.nanoTime();
-        LOGGER.info("Finished converting GameDAO (ID: {}) to Game in {} ms", gameDAO.getId(), (endTotal - startTotal) / 1_000_000);
+        LOGGER.debug("Finished converting GameDAO (ID: {}) to Game in {} ms", gameDAO.getId(), (endTotal - startTotal) / 1_000_000);
 
         return game;
     }

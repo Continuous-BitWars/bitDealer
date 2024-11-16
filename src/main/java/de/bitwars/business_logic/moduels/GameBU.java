@@ -269,7 +269,14 @@ public class GameBU implements Runnable {
                 return;
             }
 
-            List<PlayerActionBU> playerActions = player.requestStep(this);
+            List<PlayerActionBU> playerActions;
+            try {
+                playerActions = player.requestStep(this);
+            } catch (Exception e) {
+                LOGGER.error(String.format("[%d] Player %d error:", this.getId(), e.getMessage()), e);
+                return;
+            }
+
             playerActions.forEach(playerAction -> {
                 BaseBU sourceBase = this.gameField.getBases().get(playerAction.getSource());
                 BaseBU destinationBase = this.gameField.getBases().get(playerAction.getDestination());

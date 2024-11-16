@@ -68,7 +68,7 @@ public class RemotePlayer implements ActionProvider {
 
             return response.stream().map(playerAction -> gameBUMapper.toPlayerActionBU(playerAction)).toList();
         } catch (final Exception e) {
-            log.error("Error while requesting bet from player {}", url, e);
+            log.error("[{}] Error while requesting bet from player {}", gameBU.getId(), url);
         }
         return List.of();
     }

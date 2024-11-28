@@ -119,7 +119,7 @@ public class GameMapper {
                 gameDAO.getStatus(),
                 Optional.ofNullable(gameDAO.getGameTicksCount()).orElse((int) gameTickRepository.countGameTicksFromGame(gameDAO)),
                 eliminatedPlayers,
-                gameDAO.getLeague().getId()
+                gameDAO.getLeague() != null ? gameDAO.getLeague().getId() : null
         );
         long endCreation = System.nanoTime();
         LOGGER.debug("Created Game object in {} ms", (endCreation - startCreation) / 1_000_000);

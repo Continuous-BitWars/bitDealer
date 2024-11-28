@@ -3,7 +3,6 @@ package de.bitwars.models.game.mapper;
 import de.bitwars.api.models.Game;
 import de.bitwars.api.models.GameMap;
 import de.bitwars.api.models.GameOptions;
-import de.bitwars.api.models.League;
 import de.bitwars.api.models.Player;
 import de.bitwars.models.game.dao.GameDAO;
 import de.bitwars.models.game.repository.GameRepository;
@@ -109,12 +108,6 @@ public class GameMapper {
         long endGameMap = System.nanoTime();
         LOGGER.debug("Converted game map in {} ms", (endGameMap - startGameMap) / 1_000_000);
 
-        // Schritt 4: League umwandeln
-        long startLeague = System.nanoTime();
-        League league = leagueMapper.toLeague(gameDAO.getLeague());
-        long endLeague = System.nanoTime();
-        LOGGER.debug("Converted league in {} ms", (endLeague - startLeague) / 1_000_000);
-
         // Schritt 5: Game-Objekt erstellen
         long startCreation = System.nanoTime();
         Game game = new Game(
@@ -126,7 +119,7 @@ public class GameMapper {
                 gameDAO.getStatus(),
                 Optional.ofNullable(gameDAO.getGameTicksCount()).orElse((int) gameTickRepository.countGameTicksFromGame(gameDAO)),
                 eliminatedPlayers,
-                league
+                gameDAO.getLeague().getId()
         );
         long endCreation = System.nanoTime();
         LOGGER.debug("Created Game object in {} ms", (endCreation - startCreation) / 1_000_000);

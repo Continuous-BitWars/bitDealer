@@ -32,6 +32,7 @@ import java.util.Map;
 @Setter
 @AllArgsConstructor
 public class Game {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     private String name;
 
@@ -50,9 +51,11 @@ public class Game {
     @JsonProperty(value = "round_number", access = JsonProperty.Access.READ_ONLY)
     private int roundNumber;
 
+    @JsonProperty(value = "eliminated_players", access = JsonProperty.Access.READ_ONLY)
     private Map<Long, Integer> eliminatedPlayers;
 
-    private League league;
+    @JsonProperty(value = "league_id", access = JsonProperty.Access.READ_ONLY)
+    private Long leagueId;
 }
 
 

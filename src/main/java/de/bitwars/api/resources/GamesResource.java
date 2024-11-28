@@ -91,7 +91,7 @@ public class GamesResource implements GamesApi {
 
         // Schritt 2: GameDAOs zu Games mappen
         long startMapping = System.nanoTime();
-        List<Game> games = gameDAOs.parallelStream().map(this.gameMapper::toGame).toList();
+        List<Game> games = gameDAOs.stream().map(this.gameMapper::toGame).toList();
         long endMapping = System.nanoTime();
         LOGGER.debug("Mapped games in {} ms", (endMapping - startMapping) / 1_000_000);
 

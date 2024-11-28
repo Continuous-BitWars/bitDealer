@@ -118,7 +118,7 @@ public class GameMapper {
                 gameMap,
                 new GameOptions(gameDAO.getTimeBetweenTicks()),
                 gameDAO.getStatus(),
-                Optional.ofNullable(gameDAO.getGameTicksCount()).orElse((int) gameTickRepository.countGameTicksFromGame(gameDAO)),
+                Optional.ofNullable(gameDAO.getGameTicksCount()).orElse((int) -1), // gameTickRepository.countGameTicksFromGame(gameDAO)
                 eliminatedPlayers,
                 gameDAO.getLeagueId()
         );

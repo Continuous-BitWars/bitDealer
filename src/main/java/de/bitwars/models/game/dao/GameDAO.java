@@ -47,7 +47,7 @@ public class GameDAO {
     private String name;
     private int timeBetweenTicks;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private GameMapDAO map;
 
     @Enumerated(EnumType.STRING)
@@ -71,10 +71,13 @@ public class GameDAO {
     private Map<PlayerDAO, Integer> playerEliminationTicks;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "league_id")
     private LeagueDAO league;
-    
+
+    @Column(name = "league_id", insertable = false, updatable = false)
+    private Long leagueId;
+
     // store gameRounds if Game is Done as cache
     @ColumnDefault("NULL")
     private Integer gameTicksCount;

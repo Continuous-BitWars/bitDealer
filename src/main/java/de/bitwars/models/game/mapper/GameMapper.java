@@ -71,6 +71,7 @@ public class GameMapper {
                 new ArrayList<>(),
                 new HashMap<>(),
                 null,
+                null,
                 null
         );
     }
@@ -119,7 +120,7 @@ public class GameMapper {
                 gameDAO.getStatus(),
                 Optional.ofNullable(gameDAO.getGameTicksCount()).orElse((int) gameTickRepository.countGameTicksFromGame(gameDAO)),
                 eliminatedPlayers,
-                gameDAO.getLeague() != null ? gameDAO.getLeague().getId() : null
+                gameDAO.getLeagueId()
         );
         long endCreation = System.nanoTime();
         LOGGER.debug("Created Game object in {} ms", (endCreation - startCreation) / 1_000_000);
